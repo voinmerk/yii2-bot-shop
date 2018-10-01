@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 use common\models\LoginForm;
+use common\models\User;
 
 use frontend\models\forms\PasswordResetRequestForm;
 use frontend\models\forms\ResetPasswordForm;
@@ -24,10 +25,10 @@ class AuthController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'telegram'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['telegram'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -41,33 +42,35 @@ class AuthController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
+                    //'login' => ['post'],
                     'logout' => ['post'],
                 ],
             ],
         ];
     }
 
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
-    public function actionLogin()
+    public function actionTelegram()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $data = Yii::$app->request->get();
+
+        $user = User::findByUsername($data['username']);
+
+        if(!$user) {
+            $user = new User();
+
+            $user->id = $data['id'];
+            $user->username = $data['username'];
+            $user->first_name = $data['first_name'];
+            $user->last_name = $data['last_name'];
+            $user->avatar = $data['photo_url'];
+            $user->generateAuthKey();
+
+            $user->save();
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
+        Yii::$app->user->login($user, 3600 * 24 * 30);
 
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
+        return $this->goHome();
     }
 
     /**
@@ -80,75 +83,5 @@ class AuthController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
-
-    /**
-     * Signs user up.
-     *
-     * @return mixed
-     */
-    public function actionSignup()
-    {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
-            }
-        }
-
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Requests password reset.
-     *
-     * @return mixed
-     */
-    public function actionRequestPasswordReset()
-    {
-        $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
-                return $this->goHome();
-            } else {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-            }
-        }
-
-        return $this->render('requestPasswordResetToken', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Resets password.
-     *
-     * @param string $token
-     * @return mixed
-     * @throws BadRequestHttpException
-     */
-    public function actionResetPassword($token)
-    {
-        try {
-            $model = new ResetPasswordForm($token);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
-
-            return $this->goHome();
-        }
-
-        return $this->render('resetPassword', [
-            'model' => $model,
-        ]);
     }
 }

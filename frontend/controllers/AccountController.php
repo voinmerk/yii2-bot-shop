@@ -1,7 +1,10 @@
 <?php
 namespace frontend\controllers;
 
-class AccountController extends \yii\web\Controller
+use Yii;
+use yii\web\Controller;
+
+class AccountController extends Controller
 {
     public function actionIndex()
     {
