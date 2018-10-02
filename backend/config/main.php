@@ -48,6 +48,21 @@ return [
                 '' => 'site/index',
             ],
         ],
+        'assetManager' => [
+            'bundles' => [
+                'dmstr\web\AdminLteAsset' => [
+                    'skin' => 'skin-yellow',
+                ],
+            ],
+        ],
+        'i18n' => [
+            'translations' => [
+                'backend*' => [
+                    'class' => 'yii\i18n\DbMessageSource',
+                    'sourceLanguage' => \Yii::$app->language,
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];

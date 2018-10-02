@@ -47,6 +47,14 @@ return [
                 '' => 'site/index',
             ],
         ],
+        'i18n' => [
+            'translations' => [
+                'frontend*' => [
+                    'class' => 'yii\i18n\DbMessageSource',
+                    'sourceLanguage' => \Yii::$app->language,
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];

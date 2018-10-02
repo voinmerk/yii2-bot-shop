@@ -8,12 +8,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
-use common\models\LoginForm;
 use common\models\User;
-
-use frontend\models\forms\PasswordResetRequestForm;
-use frontend\models\forms\ResetPasswordForm;
-use frontend\models\forms\SignupForm;
 
 class AuthController extends Controller
 {

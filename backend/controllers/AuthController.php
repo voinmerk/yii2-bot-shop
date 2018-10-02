@@ -2,16 +2,19 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
+use yii\base\InvalidParamException;
+use yii\web\BadRequestHttpException;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+
+use common\models\User;
 
 class AuthController extends Controller
 {
-	public $layout = 'auth';
-	
-	/**
+    public $layout = 'auth';
+    
+    /**
      * {@inheritdoc}
      */
     public function behaviors()
@@ -19,9 +22,10 @@ class AuthController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
+                'only' => ['logout', 'telegram', 'login'],
                 'rules' => [
                     [
-                        'actions' => ['login'],
+                        'actions' => ['telegram', 'login'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -48,27 +52,36 @@ class AuthController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $data = [];
+
+        if(Yii::$app->session->hasFlash('error')) {
+            $data['error'] = Yii::$app->session->getFlash('error');
         }
 
-        $model = new LoginForm();
+        return $this->render('login', $data);
+    }
 
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
+    public function actionTelegram()
+    {
+        $data = Yii::$app->request->get();
 
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+        $user = User::findByUsername($data['username']);
+
+        if(!$user) {
+            Yii::$app->session->setFlash('error', 'Сбой аутентификации');
+
+            return $this->redirect(['auth/login']);
         }
+
+        Yii::$app->user->login($user, 3600 * 24 * 30);
+
+        return $this->goHome();
     }
 
     /**
-     * Logout action.
+     * Logs out the current user.
      *
-     * @return string
+     * @return mixed
      */
     public function actionLogout()
     {
@@ -77,3 +90,4 @@ class AuthController extends Controller
         return $this->goHome();
     }
 }
+

@@ -21,24 +21,24 @@ $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed201
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition <?= \dmstr\helpers\AdminLteHelper::skinClass() ?> sidebar-mini">
 <?php $this->beginBody() ?>
 <div class="wrapper">
 
     <?= $this->render(
         'header.php',
-        ['directoryAsset' => $directoryAsset]
+        ['directoryAsset' => $directoryAsset, 'user' => Yii::$app->user->identity]
     ) ?>
 
     <?= $this->render(
         'left.php',
-        ['directoryAsset' => $directoryAsset]
+        ['directoryAsset' => $directoryAsset, 'user' => Yii::$app->user->identity]
     )
     ?>
 
     <?= $this->render(
         'content.php',
-        ['content' => $content, 'directoryAsset' => $directoryAsset]
+        ['content' => $content, 'directoryAsset' => $directoryAsset, 'user' => Yii::$app->user->identity]
     ) ?>
 
 </div>
