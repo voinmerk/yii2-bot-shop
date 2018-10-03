@@ -11,9 +11,9 @@ use common\models\User;
  * @property int $id
  * @property string $title
  * @property string $content
- * @property string $name
+ * @property string username
+ * @property string token
  * @property string $image
- * @property int $voices
  * @property int $views
  * @property int $created_by
  * @property int $updated_by
@@ -25,6 +25,8 @@ use common\models\User;
  */
 class Bot extends \yii\db\ActiveRecord
 {
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
     /**
      * {@inheritdoc}
      */
@@ -39,11 +41,13 @@ class Bot extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'content', 'name', 'image', 'voices', 'views', 'created_at', 'updated_at'], 'required'],
-            [['content'], 'string'],
-            [['voices', 'views', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'name', 'image'], 'string', 'max' => 255],
-            [['name'], 'unique'],
+            [['title', 'content', 'meta_title', 'username', 'token', 'image', 'views', 'created_at', 'updated_at'], 'required'],
+            [['content', 'meta_keywords', 'meta_description'], 'string'],
+            [['views', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['title', 'meta_title', 'username', 'token', 'image'], 'string', 'max' => 255],
+            [['username', 'token'], 'unique'],
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
         ];
@@ -58,9 +62,11 @@ class Bot extends \yii\db\ActiveRecord
             'id' => Yii::t('frontend', 'ID'),
             'title' => Yii::t('frontend', 'Title'),
             'content' => Yii::t('frontend', 'Content'),
-            'name' => Yii::t('frontend', 'Name'),
+            'meta_title' => Yii::t('frontend', 'Meta Title'),
+            'meta_keywords' => Yii::t('frontend', 'Meta Keywords'),
+            'meta_description' => Yii::t('frontend', 'Meta Description'),
+            'username' => Yii::t('frontend', 'Username'),
             'image' => Yii::t('frontend', 'Image'),
-            'voices' => Yii::t('frontend', 'Voices'),
             'views' => Yii::t('frontend', 'Views'),
             'created_by' => Yii::t('frontend', 'Created By'),
             'updated_by' => Yii::t('frontend', 'Updated By'),
@@ -88,7 +94,7 @@ class Bot extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBotCategories()
+    public function getCategories()
     {
         return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable('bot_to_category', ['bot_id' => 'id']);
     }
@@ -96,8 +102,16 @@ class Bot extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBotComments()
+    public function getComments()
     {
         return $this->hasMany(Comment::className(), ['id' => 'comment_id'])->viaTable('bot_to_comment', ['bot_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBotLanguages()
+    {
+        return $this->hasMany(BotLanguage::className(), ['id' => 'bot_language_id'])->viaTable('bot_to_bot_language', ['bot_id' => 'id']);
     }
 }

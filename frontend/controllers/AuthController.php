@@ -44,6 +44,12 @@ class AuthController extends Controller
         ];
     }
 
+    public function actionLogin()
+    {
+    	// Заглушка, так как нет страницы авторизации, а движок должен иметь loginUrl (по умолчанию site/login, в настройках auth/login)
+    	return $this->goHome();
+    }
+
     public function actionTelegram()
     {
         $data = Yii::$app->request->get();
