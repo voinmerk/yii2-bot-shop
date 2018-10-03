@@ -85,9 +85,9 @@ AppAsset::register($this);
     ];
 
     if ($isGuest) {
-        $menuItems[] = '<li class="oauth-button">
-            <script async src="https://telegram.org/js/telegram-widget.js?4" data-telegram-login="voinmerk_bot" data-size="medium" data-radius="5" data-auth-url="http://botshop.loc/auth/telegram" data-request-access="write"></script>
-        </li>';
+        $menuItems[] = '<li class="oauth-button">'.Yii::$app->params['tg_widget'].'</li>';
+        // 'tg_widget' => '<script async src="https://telegram.org/js/telegram-widget.js?4" data-telegram-login="voinmerk_bot" data-size="medium" data-radius="5" data-auth-url="http://botshop.loc/auth/telegram" data-request-access="write"></script>',
+        // Почти тоже самое и в админке
 
         // $menuItems[] = '<li><a href="#authDialog" class="popup-open">Sign In</a></li>';
     } else {
