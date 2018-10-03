@@ -34,7 +34,7 @@ $fieldOptions2 = [
         <?php } ?>
 
         <p class="text-center">
-            <script async src="https://telegram.org/js/telegram-widget.js?4" data-telegram-login="voinmerk_bot" data-size="large" data-radius="5" data-auth-url="http://botshop.loc/admin/auth/telegram" data-request-access="write"></script>
+            <?= Yii::$app->params['tg_widget'] ?>
         </p>
     </div>
     <!-- /.login-box-body -->

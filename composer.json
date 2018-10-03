@@ -19,7 +19,11 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "dmstr/yii2-adminlte-asset": "^2.1",
+<<<<<<< HEAD
         "kartik-v/yii2-widget-rating": "dev-master"
+=======
+        "codemix/yii2-localeurls": "^1.7"
+>>>>>>> 18189aa4e52fb857aa6217335985d3700639f421
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

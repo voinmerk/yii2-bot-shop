@@ -167,16 +167,21 @@ CREATE TABLE IF NOT EXISTS `bot` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `meta_title` varchar(255) NOT NULL,
+  `meta_keywords` text,
+  `meta_description` text,
+  `username` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
-  `voices` int(11) NOT NULL DEFAULT '0',
   `views` int(11) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `name` (`username`),
+  UNIQUE KEY `token` (`token`),
   KEY `FK_bot_user_created` (`created_by`),
   KEY `FK_bot_user` (`updated_by`),
   CONSTRAINT `FK_bot_user` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -185,9 +190,47 @@ CREATE TABLE IF NOT EXISTS `bot` (
 
 -- Дамп данных таблицы yii_botshop_advanced.bot: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `bot` DISABLE KEYS */;
-INSERT INTO `bot` (`id`, `title`, `content`, `name`, `image`, `voices`, `views`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-	(1, 'Первый бот', 'Первый бот', 'firstbot', 'no.jpg', 0, 0, 343142692, 343142692, 1538469948, 1538469948);
+INSERT INTO `bot` (`id`, `title`, `content`, `meta_title`, `meta_keywords`, `meta_description`, `username`, `token`, `image`, `views`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+	(1, 'FrontVisionBot', 'Удобный бот для работы с клиентами компании ООО FrontVision', 'FrontVisionBot', NULL, NULL, 'frontvision_bot', '502079464:AAGVyl3_NZPLCNQFaj--DY6zKa-SOZySaiA', 'no.jpg', 0, 1, 343142692, 343142692, 1538469948, 1538469948);
 /*!40000 ALTER TABLE `bot` ENABLE KEYS */;
+
+-- Дамп структуры для таблица yii_botshop_advanced.bot_language
+CREATE TABLE IF NOT EXISTS `bot_language` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Дамп данных таблицы yii_botshop_advanced.bot_language: ~0 rows (приблизительно)
+/*!40000 ALTER TABLE `bot_language` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bot_language` ENABLE KEYS */;
+
+-- Дамп структуры для таблица yii_botshop_advanced.bot_rating
+CREATE TABLE IF NOT EXISTS `bot_rating` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `bot_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_bot_rating_bot` (`bot_id`),
+  KEY `FK_bot_rating_user` (`user_id`),
+  CONSTRAINT `FK_bot_rating_bot` FOREIGN KEY (`bot_id`) REFERENCES `bot` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_bot_rating_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Дамп данных таблицы yii_botshop_advanced.bot_rating: ~0 rows (приблизительно)
+/*!40000 ALTER TABLE `bot_rating` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bot_rating` ENABLE KEYS */;
+
+-- Дамп структуры для таблица yii_botshop_advanced.bot_to_bot_language
+CREATE TABLE IF NOT EXISTS `bot_to_bot_language` (
+  `bot_id` int(11) NOT NULL,
+  `bot_language_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Дамп данных таблицы yii_botshop_advanced.bot_to_bot_language: ~0 rows (приблизительно)
+/*!40000 ALTER TABLE `bot_to_bot_language` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bot_to_bot_language` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.bot_to_category
 CREATE TABLE IF NOT EXISTS `bot_to_category` (
@@ -212,15 +255,10 @@ CREATE TABLE IF NOT EXISTS `bot_to_comment` (
 -- Дамп структуры для таблица yii_botshop_advanced.category
 CREATE TABLE IF NOT EXISTS `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) NOT NULL DEFAULT '0',
-  `title` varchar(255) NOT NULL,
-  `content` text,
-  `image` varchar(255) DEFAULT NULL,
   `slug` varchar(255) NOT NULL,
-  `meta_title` varchar(255) NOT NULL,
-  `meta_keywords` text,
-  `meta_description` text,
+  `image` varchar(255) DEFAULT NULL,
   `sort_order` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `created_at` int(11) NOT NULL,
@@ -231,13 +269,53 @@ CREATE TABLE IF NOT EXISTS `category` (
   KEY `FK_category_user_updated` (`updated_by`),
   CONSTRAINT `FK_category_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_category_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.category: ~1 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.category: ~7 rows (приблизительно)
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` (`id`, `parent_id`, `title`, `content`, `image`, `slug`, `meta_title`, `meta_keywords`, `meta_description`, `sort_order`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-	(1, 0, 'Игры', 'Игры', NULL, '', 'Игры заг', 'ыва', 'ыва', 0, 1, 1, 0, 0);
+INSERT INTO `category` (`id`, `slug`, `image`, `sort_order`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+	(1, 'games', NULL, 3, 1, 1, 1, 0, 0),
+	(2, 'education', NULL, 1, 1, 1, 1, 0, 0),
+	(3, 'social', NULL, 2, 1, 1, 1, 0, 0),
+	(4, 'shops', NULL, 4, 1, 1, 1, 0, 0),
+	(5, 'utilities', NULL, 5, 1, 1, 1, 0, 0),
+	(6, 'entertainment', NULL, 6, 1, 1, 1, 0, 0),
+	(7, 'news', NULL, 7, 1, 1, 1, 0, 0);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
+
+-- Дамп структуры для таблица yii_botshop_advanced.category_translate
+CREATE TABLE IF NOT EXISTS `category_translate` (
+  `category_id` int(11) NOT NULL,
+  `language_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text,
+  `meta_title` varchar(255) NOT NULL,
+  `meta_keywords` text,
+  `meta_description` text,
+  KEY `FK_category_translate_category` (`category_id`),
+  KEY `FK_category_translate_language` (`language_id`),
+  CONSTRAINT `FK_category_translate_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_category_translate_language` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Дамп данных таблицы yii_botshop_advanced.category_translate: ~14 rows (приблизительно)
+/*!40000 ALTER TABLE `category_translate` DISABLE KEYS */;
+INSERT INTO `category_translate` (`category_id`, `language_id`, `title`, `content`, `meta_title`, `meta_keywords`, `meta_description`) VALUES
+	(1, 1, 'Игры', NULL, 'Игры', NULL, NULL),
+	(1, 2, 'Games', NULL, 'Games', NULL, NULL),
+	(2, 1, 'Образование', NULL, 'Образование', NULL, NULL),
+	(2, 2, 'Education', NULL, 'Education', NULL, NULL),
+	(3, 1, 'Социальные', NULL, 'Социальные', NULL, NULL),
+	(3, 2, 'Social', NULL, 'Social', NULL, NULL),
+	(4, 1, 'Магазины', NULL, 'Магазины', NULL, NULL),
+	(4, 2, 'Shops', NULL, 'Shops', NULL, NULL),
+	(5, 1, 'Коммунальные услуги', NULL, 'Коммунальные услуги', NULL, NULL),
+	(5, 2, 'Utilities', NULL, 'Utilities', NULL, NULL),
+	(6, 1, 'Развлечения', NULL, 'Развлечения', NULL, NULL),
+	(6, 2, 'Entertainment', NULL, 'Entertainment', NULL, NULL),
+	(7, 1, 'Новости', NULL, 'Новости', NULL, NULL),
+	(7, 2, 'News', NULL, 'News', NULL, NULL);
+/*!40000 ALTER TABLE `category_translate` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.comment
 CREATE TABLE IF NOT EXISTS `comment` (
@@ -269,10 +347,13 @@ CREATE TABLE IF NOT EXISTS `language` (
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.language: ~0 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.language: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `language` DISABLE KEYS */;
+INSERT INTO `language` (`id`, `name`, `code`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+	(1, 'Русский', 'ru', 1, 1, 0, 0),
+	(2, 'English', 'en', 1, 1, 0, 0);
 /*!40000 ALTER TABLE `language` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.message
@@ -285,7 +366,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   CONSTRAINT `fk_message_source_message` FOREIGN KEY (`id`) REFERENCES `source_message` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Дамп данных таблицы yii_botshop_advanced.message: ~6 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.message: ~20 rows (приблизительно)
 /*!40000 ALTER TABLE `message` DISABLE KEYS */;
 INSERT INTO `message` (`id`, `language`, `translation`) VALUES
 	(1, 'en', 'Sign in to start your session'),
@@ -293,7 +374,21 @@ INSERT INTO `message` (`id`, `language`, `translation`) VALUES
 	(2, 'en', 'Category'),
 	(2, 'ru', 'Категория'),
 	(3, 'en', 'Categpries'),
-	(3, 'ru', 'Категории');
+	(3, 'ru', 'Категории'),
+	(4, 'en', 'Bots Catalog'),
+	(4, 'ru', 'Каталог ботов'),
+	(5, 'en', 'Catalog'),
+	(5, 'ru', 'Каталог'),
+	(6, 'en', 'Your profile'),
+	(6, 'ru', 'Ваш профиль'),
+	(7, 'en', 'Your bots'),
+	(7, 'ru', 'Ваши боты'),
+	(8, 'en', 'Added bot'),
+	(8, 'ru', 'Добавить бота'),
+	(9, 'en', 'Setting'),
+	(9, 'ru', 'Настройки'),
+	(10, 'en', 'Logout'),
+	(10, 'ru', 'Выход');
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.migration
@@ -320,14 +415,21 @@ CREATE TABLE IF NOT EXISTS `source_message` (
   `message` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `idx_source_message_category` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Дамп данных таблицы yii_botshop_advanced.source_message: ~3 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.source_message: ~10 rows (приблизительно)
 /*!40000 ALTER TABLE `source_message` DISABLE KEYS */;
 INSERT INTO `source_message` (`id`, `category`, `message`) VALUES
 	(1, 'backend', 'Sign in to start your session'),
 	(2, 'backend', 'Category'),
-	(3, 'backend', 'Categories');
+	(3, 'backend', 'Categories'),
+	(4, 'frontend', 'Bots Catalog'),
+	(5, 'frontend', 'Catalog'),
+	(6, 'frontend', 'Your profile'),
+	(7, 'frontend', 'Your bots'),
+	(8, 'frontend', 'Added bot'),
+	(9, 'frontend', 'Setting'),
+	(10, 'frontend', 'Logout');
 /*!40000 ALTER TABLE `source_message` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.user

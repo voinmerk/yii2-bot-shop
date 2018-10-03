@@ -8,7 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-botshop-public',
-    'name' => 'BotShop',
+    'name' => 'BotSpy',
     'basePath' => dirname(__DIR__),
     'sourceLanguage' => 'ru-RU',
     'language' => 'ru',
@@ -41,10 +41,19 @@ return [
             'errorAction' => 'site/error',
         ],
         'urlManager' => [
+            'class' => 'codemix\localeurls\UrlManager',
+            'languages' => ['en', 'ru'],
+            'enableDefaultLanguageUrlCode' => true,
+
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '' => 'site/index',
+                '<category:[\w_-]+>/<bot:[\w_-]+>' => 'bot/view',
+                '<category:[\w_-]+>' => 'bot/category',
+                //'catalog' => 'bot/index',
+                '' => 'bot/index',
+
+                'language/<id:\w+>' => 'site/language',
             ],
         ],
         'i18n' => [
