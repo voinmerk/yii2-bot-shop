@@ -6,6 +6,14 @@ use yii\bootstrap\NavBar;
 use rmrevin\yii\fontawesome\FA;
 use frontend\models\Language;
 
+$isActive = function($controller, $action, $onlyController = false) {
+    if($onlyController) {
+        return Yii::$app->controller->id == $controller;
+    }
+
+    return Yii::$app->controller->id == $controller && Yii::$app->controller->action->id == $action;
+};
+
 /*if($isGuest) {
     $js = '
         $(document).ready(function() {
@@ -38,7 +46,7 @@ NavBar::begin([
     ],
 ]);
 $menuItems = [
-    ['label' => Yii::t('frontend', 'Catalog'), 'url' => ['/bot'], 'active' => Yii::$app->controller->id == 'bot'],
+    ['label' => Yii::t('frontend', 'Catalog'), 'url' => ['/bot'], 'active' => $isActive('bot', '', true)],
     /*['label' => 'About', 'url' => ['/site/about']],
     ['label' => 'Contact', 'url' => ['/site/contact']],*/
 ];
@@ -66,14 +74,14 @@ if ($isGuest) {
     $menuItems[] = [
         'label' => $user->username,
         'items' => [
-             ['label' => Fa::icon('user') . ' ' . Yii::t('frontend', 'Your profile'),   'url' => ['account/index'],     'active' => Yii::$app->controller->action->id == 'index'],
-             ['label' => Fa::icon('list') . ' ' . Yii::t('frontend', 'Your bots'),      'url' => ['account/bots'],      'active' => Yii::$app->controller->action->id == 'bots'],
-             ['label' => Fa::icon('plus') . ' ' . Yii::t('frontend', 'Add bot'),        'url' => ['account/add-bot'],   'active' => Yii::$app->controller->action->id == 'add-bot'],
-             ['label' => Fa::icon('cog')  . ' ' . Yii::t('frontend', 'Setting'),        'url' => ['account/setting'],   'active' => Yii::$app->controller->action->id == 'setting'],
+             ['label' => Fa::icon('user') . ' ' . Yii::t('frontend', 'Your profile'),   'url' => ['account/index'],     'active' => $isActive('account', 'index')],
+             ['label' => Fa::icon('list') . ' ' . Yii::t('frontend', 'Your bots'),      'url' => ['account/bots'],      'active' => $isActive('account', 'bots')],
+             ['label' => Fa::icon('plus') . ' ' . Yii::t('frontend', 'Add bot'),        'url' => ['account/add-bot'],   'active' => $isActive('account', 'add-bot')],
+             ['label' => Fa::icon('cog')  . ' ' . Yii::t('frontend', 'Setting'),        'url' => ['account/setting'],   'active' => $isActive('account', 'setting')],
              '<li class="divider"></li>',
              ['label' => Fa::icon('sign-out') . ' ' . Yii::t('frontend', 'Logout'), 'url' => ['/auth/logout'], 'linkOptions' => ['data-method' => 'post']],
         ],
-        'active' => Yii::$app->controller->id == 'account',
+        'active' => $isActive('account', '', true),
     ];
 }
 echo Nav::widget([

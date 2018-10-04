@@ -62,6 +62,17 @@ class Category extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            /*'id' => Yii::t('frontend', 'ID'),
+            'image' => Yii::t('frontend', 'Image'),
+            'slug' => Yii::t('frontend', 'Slug'),
+            'sort_order' => Yii::t('frontend', 'Sort Order'),
+            'status' => Yii::t('frontend', 'Status'),
+            'default_category_id' => Yii::t('frontend', 'Default Category Id'),
+            'created_by' => Yii::t('frontend', 'Created By'),
+            'updated_by' => Yii::t('frontend', 'Updated By'),
+            'created_at' => Yii::t('frontend', 'Created At'),
+            'updated_at' => Yii::t('frontend', 'Updated At'),*/
+
             'id' => Yii::t('frontend', 'ID'),
             'image' => Yii::t('frontend', 'Image'),
             'slug' => Yii::t('frontend', 'Slug'),

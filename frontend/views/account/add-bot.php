@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\widgets\Menu;
 use rmrevin\yii\fontawesome\FA;
@@ -26,7 +27,29 @@ $this->params['breadcrumbs'][] = Yii::t('frontend', 'Add bot');
         </div>
 
         <div class="col-md-8">
-            <h2>Content</h2>
+            <?php $form = ActiveForm::begin(); ?>
+
+            <?= $form->field($model, 'meta_title')->textInput() ?>
+
+            <?= $form->field($model, 'title')->textInput() ?>
+
+            <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
+
+            <?= $form->field($model, 'image')->fileInput() ?>
+
+            <?= $form->field($model, 'default_category_id')->dropDownList($categoryList, ['prompt' => '-- Выбор категории --']) ?>
+
+            <?= $form->field($model, 'category_ids')->dropDownList($categoryList, ['multiple' => true]) ?>
+
+            <?= $form->field($model, 'language_ids')->dropDownList($botLanguageList, ['multiple' => true]) ?>
+
+            <?= $form->field($model, 'token')->textInput() ?>
+
+            <div class="form-group">
+                <?= Html::submitButton(Yii::t('frontend', 'Add bot'), ['class' => 'btn btn-success']) ?>
+            </div>
+
+            <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>

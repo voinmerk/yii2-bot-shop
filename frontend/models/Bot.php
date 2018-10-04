@@ -27,6 +27,10 @@ class Bot extends \yii\db\ActiveRecord
 {
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
+
+    public $category_ids = [];
+    public $language_ids = [];
+
     /**
      * {@inheritdoc}
      */
@@ -59,6 +63,7 @@ class Bot extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            /*
             'id' => Yii::t('frontend', 'ID'),
             'title' => Yii::t('frontend', 'Title'),
             'content' => Yii::t('frontend', 'Content'),
@@ -68,10 +73,31 @@ class Bot extends \yii\db\ActiveRecord
             'username' => Yii::t('frontend', 'Username'),
             'image' => Yii::t('frontend', 'Image'),
             'views' => Yii::t('frontend', 'Views'),
+            'default_category_id' => Yii::t('frontend', 'Default Category Id'),
             'created_by' => Yii::t('frontend', 'Created By'),
             'updated_by' => Yii::t('frontend', 'Updated By'),
             'created_at' => Yii::t('frontend', 'Created At'),
             'updated_at' => Yii::t('frontend', 'Updated At'),
+            */
+
+            'id' => Yii::t('frontend', 'ID'),
+            'title' => Yii::t('frontend', 'Имя бота'),
+            'content' => Yii::t('frontend', 'Описание'),
+            'meta_title' => Yii::t('frontend', 'Заголовок страницы бота'),
+            'meta_keywords' => Yii::t('frontend', 'Meta Keywords'),
+            'meta_description' => Yii::t('frontend', 'Meta Description'),
+            'username' => Yii::t('frontend', 'Логин бота'),
+            'token' => Yii::t('frontend', 'Токен'),
+            'image' => Yii::t('frontend', 'Изображение (аватар)'),
+            'views' => Yii::t('frontend', 'Views'),
+            'default_category_id' => Yii::t('frontend', 'Категория по умолчанию'),
+            'created_by' => Yii::t('frontend', 'Created By'),
+            'updated_by' => Yii::t('frontend', 'Updated By'),
+            'created_at' => Yii::t('frontend', 'Created At'),
+            'updated_at' => Yii::t('frontend', 'Updated At'),
+
+            'category_ids' => Yii::t('frontend', 'Категория бота'),
+            'language_ids' => Yii::t('frontend', 'Языки бота'),
         ];
     }
 
