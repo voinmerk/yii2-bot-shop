@@ -7,12 +7,15 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use frontend\models\forms\ContactForm;
 use yii\filters\VerbFilter;
+use frontend\models\Language;
+
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    static $languages;
     /**
      * {@inheritdoc}
      */
@@ -86,15 +89,5 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-
-    public function actionLanguage($id)
-    {
-        if(!Yii::$app->request->isPost) {
-            return $this->goBack();
-        }
-
-        Yii::$app->language = $id;
-
-        return $this->goBack();
-    }
+    
 }

@@ -10,14 +10,14 @@ return [
     'id' => 'app-botshop-public',
     'name' => 'BotSpy',
     'basePath' => dirname(__DIR__),
-    'sourceLanguage' => 'ru-RU',
-    'language' => 'ru',
-    'bootstrap' => ['log'],
+    'sourceLanguage' => 'en',
+    'bootstrap' => ['log', 'languages'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-public',
             'baseUrl' => '',
+            'class' => 'common\components\Request'
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -41,13 +41,13 @@ return [
             'errorAction' => 'site/error',
         ],
         'urlManager' => [
-            'class' => 'codemix\localeurls\UrlManager',
-            'languages' => ['en', 'ru'],
+            'class' => 'common\components\UrlManager',
             'enableDefaultLanguageUrlCode' => true,
 
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'languages' => 'languages/default/index',
                 'catalog/<category:[\w_-]+>/<bot:[\w_-]+>' => 'bot/view',
                 'catalog/<category:[\w_-]+>' => 'bot/category',
                 'catalog' => 'bot/index',
@@ -63,6 +63,14 @@ return [
                     'sourceLanguage' => \Yii::$app->language,
                 ],
             ],
+        ],
+    ],
+    'modules' => [
+        'languages' => [
+            'class' => 'common\modules\languages\Module',
+
+            'default_language' => 'en', //основной язык (по-умолчанию)
+            'show_default' => false, //true - показывать в URL основной язык, false - нет
         ],
     ],
     'params' => $params,

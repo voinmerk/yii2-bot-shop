@@ -78,6 +78,18 @@ class Language extends \yii\db\ActiveRecord
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function getLanguages()
+    {
+        $languages = self::find()
+            ->asArray()
+            ->all();
+
+        return $languages;
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getCategoryTranslites()

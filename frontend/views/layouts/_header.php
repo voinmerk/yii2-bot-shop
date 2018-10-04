@@ -56,12 +56,15 @@ echo Nav::widget([
 ]);
 $menuItems = [];
 
+$items = array();
+
+foreach (Language::getLanguages() as $language) {
+    $items[] = ['label' => $language['name'], 'url' => ['languages/default/index', 'lang' => $language['code']]];
+}
+
 $menuItems[] = [
     'label' => Language::getLanguageNameByCode(Yii::$app->language),
-    'items' => [
-        ['label' => 'Русский', 'url' => ['site/language', 'id' => 'ru'], 'linkOptions' => ['data-method' => 'post']],
-        ['label' => 'English', 'url' => ['site/language', 'id' => 'en'], 'linkOptions' => ['data-method' => 'post']],
-    ],
+    'items' => $items,
 ];
 
 if ($isGuest) {
