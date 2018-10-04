@@ -5,6 +5,10 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('frontend', 'Catalog') . ' - ' . $category->metaTitle;
 
+$this->params['breadcrumbs'][] = [
+    'label' => Yii::t('frontend', 'Bots Catalog'),
+    'url' => Url::to(['bot/index']),
+];
 $this->params['breadcrumbs'][] = $category->title;
 ?>
 <div class="catalog-index">
@@ -18,7 +22,9 @@ $this->params['breadcrumbs'][] = $category->title;
         </div>
 
         <div class="col-md-8">
-
+            <?php foreach($bots as $bot) { ?>
+            <?= $this->render('_bot', ['bot' => $bot]) ?>
+            <?php } ?>
         </div>
     </div>
 </div>

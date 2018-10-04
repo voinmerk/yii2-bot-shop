@@ -48,9 +48,9 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<category:[\w_-]+>/<bot:[\w_-]+>' => 'bot/view',
-                '<category:[\w_-]+>' => 'bot/category',
-                //'catalog' => 'bot/index',
+                'catalog/<category:[\w_-]+>/<bot:[\w_-]+>' => 'bot/view',
+                'catalog/<category:[\w_-]+>' => 'bot/category',
+                'catalog' => 'bot/index',
                 '' => 'bot/index',
 
                 'language/<id:\w+>' => 'site/language',

@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "dmstr/yii2-adminlte-asset": "^2.1",
         "kartik-v/yii2-widget-rating": "dev-master",
-        "codemix/yii2-localeurls": "^1.7"
+        "codemix/yii2-localeurls": "^1.7",
+        "valiant/yii2-list-group-widget": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

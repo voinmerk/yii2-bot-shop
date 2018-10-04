@@ -76,6 +76,36 @@ class Bot extends \yii\db\ActiveRecord
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function getListAll()
+    {
+        $query = self::find()->where(['status' => self::STATUS_ACTIVE]);
+
+        return $query->all();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getListByCategory($category)
+    {
+        $categoryId = Category::findOne(['slug' => $category])->id;
+
+        //$$query = self::find()->where()->
+
+        $query = self::find()
+                        ->joinWith([
+                            'categories' => function($q) {
+                                return $q->andWhere(['bot_to_category.id' => $categoryId]);
+                            }
+                        ])
+                        ->where(['bot.status' => self::STATUS_ACTIVE]);
+
+        return $query->all();
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getUpdatedBy()
@@ -113,5 +143,13 @@ class Bot extends \yii\db\ActiveRecord
     public function getBotLanguages()
     {
         return $this->hasMany(BotLanguage::className(), ['id' => 'bot_language_id'])->viaTable('bot_to_bot_language', ['bot_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDefCategory()
+    {
+        return $this->hasOne(Category::className(), ['id' => 'default_category_id']);
     }
 }

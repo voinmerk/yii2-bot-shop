@@ -10,4 +10,19 @@ class AccountController extends Controller
     {
         return $this->render('index');
     }
+
+    public function actionBots()
+    {
+        return $this->render('bots');
+    }
+
+    public function actionAddBot()
+    {
+        return $this->render('add-bot');
+    }
+
+    public function actionSetting()
+    {
+        return $this->render('setting');
+    }
 }

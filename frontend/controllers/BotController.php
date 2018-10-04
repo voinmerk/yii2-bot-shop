@@ -30,7 +30,7 @@ class BotController extends Controller
 
         $data['category'] = Category::findOne(['slug' => $category]);
         $data['categories'] = Category::getList();
-        $data['bots'] = Bot::findAll(['status' => Bot::STATUS_ACTIVE]);
+        $data['bots'] = Bot::findAll(['status' => Bot::STATUS_ACTIVE]);//Bot::getListByCategory($category); //
 
     	return $this->render('category', $data);
     }

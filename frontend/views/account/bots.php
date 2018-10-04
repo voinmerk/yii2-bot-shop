@@ -7,17 +7,17 @@ use rmrevin\yii\fontawesome\FA;
 
 $user = Yii::$app->user->identity;
 
-$this->title = Yii::t('frontend', 'Your profile');
+$this->title = Yii::t('frontend', 'Your bots');
 
 $this->params['breadcrumbs'][] = [
     'label' => $user->first_name . ' ' . $user->last_name,
     'url' => Url::to(['account/index']),
 ];
-$this->params['breadcrumbs'][] = Yii::t('frontend', 'Profile');
+$this->params['breadcrumbs'][] = Yii::t('frontend', 'Bots');
 ?>
 <div class="account-index">
     <div class="page-header">
-        <h1><?= Yii::t('frontend', 'Your profile') ?></h1>
+        <h1><?= Yii::t('frontend', 'Your bots') ?></h1>
     </div>
 
     <div class="row">

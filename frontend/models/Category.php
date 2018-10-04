@@ -84,11 +84,11 @@ class Category extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-     public static function getList()
-     {
-         $language = Language::getLanguageIdByCode(Yii::$app->language);
+    public static function getList()
+    {
+        $language = Language::getLanguageIdByCode(Yii::$app->language);
 
-         return self::find()
+        return self::find()
                     ->joinWith([
                         'categoryTranslates' => function($query) {
                             return $query->from(['ct' => CategoryTranslate::tableName()]);
@@ -97,6 +97,14 @@ class Category extends \yii\db\ActiveRecord
                     ->where(['status' => self::STATUS_ACTIVE, 'ct.language_id' => $language])
                     ->orderBy(['sort_order' => SORT_ASC])
                     ->all();
+    }
+
+     /**
+      * @return \yii\db\ActiveQuery
+      */
+     public function getBots()
+     {
+         return $this->hasMany(Bot::className(), ['id' => 'bot_id'])->viaTable('bot_to_category', ['category_id' => 'id']);
      }
 
     /**

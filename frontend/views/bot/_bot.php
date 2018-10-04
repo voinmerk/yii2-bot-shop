@@ -5,12 +5,6 @@ use yii\helpers\Url;
 use yii\widgets\Menu;
 use rmrevin\yii\fontawesome\FA;
 
-$this->title = Yii::t('frontend', 'Catalog') . ' - ' . $category->metaTitle;
-$this->params['breadcrumbs'][] = [
-    'label' => Yii::t('frontend', 'Bots Catalog'),
-    'url' => Url::to(['bot/index']),
-];
-$this->params['breadcrumbs'][] = $category->title;
 ?>
 <div class="col-md-6">
     <div class="panel panel-default">
@@ -21,8 +15,8 @@ $this->params['breadcrumbs'][] = $category->title;
             <p><?= $bot->content ?></p>
         </div>
         <div class="panel-footer clearfix">
-            <?= Html::a(Fa::icon('eye'), Url::to(['bot/view', 'category' => 'null', 'bot' => $bot->username]), ['class' => 'btn btn-primary btn-flat pull-left']) ?>
-            <?= Html::button('Add bot ' . Fa::icon('telegram'), ['class' => 'btn btn-default btn-flat pull-right']) ?>
+            <?= Html::a(Fa::icon('eye'), Url::to(['bot/view', 'category' => isset($category) ? $category->slug : $bot->defCategory->slug, 'bot' => $bot->username]), ['class' => 'btn btn-primary btn-flat pull-left']) ?>
+            <?= Html::a(Yii::t('frontend', 'Add to {icon}', ['icon' => Fa::icon('telegram')]), 'https://telegram.me/' . $bot->username, ['class' => 'btn btn-success btn-flat pull-right', 'target' => '_blank']) ?>
         </div>
     </div>
 </div>

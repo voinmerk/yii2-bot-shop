@@ -3,13 +3,13 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = Yii::t('frontend', 'Bots Catalog');
+$this->title = Yii::t('frontend', 'Bots Catalog') . '';
 
-//$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="catalog-index">
     <div class="page-header">
-        <h1><?= Html::encode($this->title) ?></h1>
+        <h1><?= $this->title ?></h1>
     </div>
 
     <div class="row">
