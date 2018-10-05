@@ -31,9 +31,16 @@ class BotController extends Controller
     	$data = [];
 
         $data['language_id'] = Language::getLanguageIdByCode(Yii::$app->language);
-        $data['category'] = Category::findOne(['slug' => $category]);
+
+        $modelCategory = Category::getCategoryById($category);
+
+        if(!$modelCategory) {
+            throw new BadRequestHttpException(Yii::t('frontend', 'This category does not exist!'));
+        }
+
+        $data['category'] = $modelCategory;
         $data['categories'] = Category::getList();
-        $data['dataProvider'] = Bot::getListByCategory($category); //Bot::findAll(['status' => Bot::STATUS_ACTIVE]);//
+        $data['bots'] = Category::find()->where(['slug' => $category])->with('bots')->one()->bots;
 
     	return $this->render('category', $data);
     }
@@ -42,8 +49,19 @@ class BotController extends Controller
     {
     	$data = [];
 
-        $data['category'] = Category::findOne(['slug' => $category, 'status' => Category::STATUS_ACTIVE]);
-        $data['bot'] = Bot::findOne(['username' => $bot, 'status' => Bot::STATUS_ACTIVE]);
+        $category = Category::getCategoryById($category);
+        $bot = Bot::getBotById($bot);
+
+        if(!$category) {
+            throw new BadRequestHttpException(Yii::t('frontend', 'This category does not exist!'));
+        }
+
+        if(!$bot) {
+            throw new BadRequestHttpException(Yii::t('frontend', 'This bot does not exist!'));
+        }
+
+        $data['category'] = $category;
+        $data['bot'] = $bot;
 
     	return $this->render('view', $data);
     }

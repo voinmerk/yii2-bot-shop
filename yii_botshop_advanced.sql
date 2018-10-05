@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         127.0.0.1
--- Версия сервера:               5.7.16 - MySQL Community Server (GPL)
+-- Версия сервера:               5.7.20 - MySQL Community Server (GPL)
 -- Операционная система:         Win64
 -- HeidiSQL Версия:              9.5.0.5196
 -- --------------------------------------------------------
@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `bot` (
   CONSTRAINT `FK_bot_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.bot: ~1 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.bot: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `bot` DISABLE KEYS */;
 INSERT INTO `bot` (`id`, `title`, `content`, `meta_title`, `meta_keywords`, `meta_description`, `username`, `token`, `start_param`, `image`, `views`, `status`, `default_category_id`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
 	(1, 'FrontVisionBot', 'Удобный бот для работы с клиентами компании ООО FrontVision', 'FrontVisionBot', NULL, NULL, 'frontvision_bot', '502079464:AAGVyl3_NZPLCNQFaj--DY6zKa-SOZySaiA', NULL, 'no.jpg', 0, 1, 5, 343142692, 343142692, 1538469948, 1538469948);
@@ -319,11 +319,23 @@ CREATE TABLE IF NOT EXISTS `bot_to_category` (
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.bot_to_category: ~0 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.bot_to_category: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `bot_to_category` DISABLE KEYS */;
 INSERT INTO `bot_to_category` (`bot_id`, `category_id`) VALUES
 	(1, 5);
 /*!40000 ALTER TABLE `bot_to_category` ENABLE KEYS */;
+
+-- Дамп структуры для таблица yii_botshop_advanced.bot_to_comment
+CREATE TABLE IF NOT EXISTS `bot_to_comment` (
+  `bot_id` int(11) NOT NULL,
+  `comment_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Дамп данных таблицы yii_botshop_advanced.bot_to_comment: ~0 rows (приблизительно)
+/*!40000 ALTER TABLE `bot_to_comment` DISABLE KEYS */;
+INSERT INTO `bot_to_comment` (`bot_id`, `comment_id`) VALUES
+	(1, 1);
+/*!40000 ALTER TABLE `bot_to_comment` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.category
 CREATE TABLE IF NOT EXISTS `category` (
@@ -411,7 +423,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
 -- Дамп данных таблицы yii_botshop_advanced.comment: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
 INSERT INTO `comment` (`id`, `content`, `bot_id`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-	(1, 'Первый комент из БД', 1, 343142692, 343142692, 0, 0);
+	(1, 'Первый коммент из БД', 1, 343142692, 343142692, 0, 0);
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.language
@@ -473,7 +485,19 @@ INSERT INTO `message` (`id`, `language`, `translation`) VALUES
 	(12, 'en', 'Profile'),
 	(12, 'ru', 'Профиль'),
 	(13, 'en', 'Bots'),
-	(13, 'ru', 'Боты');
+	(13, 'ru', 'Боты'),
+	(14, 'en', 'There is nothing in this category!'),
+	(14, 'ru', 'В этой категории ничего нет!'),
+	(15, 'en', 'There is nothing in the catalog!'),
+	(15, 'ru', 'В каталоге ничего нет!'),
+	(16, 'en', 'This category does not exist!'),
+	(16, 'ru', 'Этой категории не существует!'),
+	(17, 'en', 'This bot does not exist!'),
+	(17, 'ru', 'Этого бота не существует!'),
+	(18, 'en', 'The above error occurred while the Web server was processing your request.'),
+	(18, 'ru', 'Вышеуказанная ошибка произошла во время обработки запроса веб-сервером.'),
+	(19, 'en', 'Please contact us if you think this is a server error. Thank you!'),
+	(19, 'ru', 'Пожалуйста, свяжитесь с нами, если вы думаете, что это ошибка сервера. Спасибо!');
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.migration
@@ -500,7 +524,7 @@ CREATE TABLE IF NOT EXISTS `source_message` (
   `message` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `idx_source_message_category` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Дамп данных таблицы yii_botshop_advanced.source_message: ~13 rows (приблизительно)
 /*!40000 ALTER TABLE `source_message` DISABLE KEYS */;
@@ -517,7 +541,13 @@ INSERT INTO `source_message` (`id`, `category`, `message`) VALUES
 	(10, 'frontend', 'Logout'),
 	(11, 'frontend', 'Add to {icon}'),
 	(12, 'frontend', 'Profile'),
-	(13, 'frontend', 'Bots');
+	(13, 'frontend', 'Bots'),
+	(14, 'frontend', 'There is nothing in this category!'),
+	(15, 'frontend', 'There is nothing in the catalog!'),
+	(16, 'frontend', 'This category does not exist!'),
+	(17, 'frontend', 'This bot does not exist!'),
+	(18, 'frontend', 'The above error occurred while the Web server was processing your request.'),
+	(19, 'frontend', 'Please contact us if you think this is a server error. Thank you!');
 /*!40000 ALTER TABLE `source_message` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.user

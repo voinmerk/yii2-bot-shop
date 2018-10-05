@@ -305,6 +305,20 @@ a.desc:after {
     border-bottom-right-radius: 0;
 }
 
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+    background-color: #b43535;
+}
+
+.dropdown-menu > li > a > i {
+    color: #b43535;
+}
+
+.dropdown-menu > .active > a > i {
+    color: #fff;
+}
+
 /* form */
 
 .btn {

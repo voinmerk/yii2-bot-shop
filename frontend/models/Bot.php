@@ -64,6 +64,26 @@ class Bot extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public function behaviors()
+    {
+        return [
+            /*[
+                'class' => \yiidreamteam\upload\ImageUploadBehavior::className(),
+                'attribute' => 'image',
+                'thumbs' => [
+                    'thumb' => ['width' => 500, 'height' => 500],
+                ],
+                'filePath' => '@webroot/images/[[pk]].[[extension]]',
+                'fileUrl' => '/images/[[pk]].[[extension]]',
+                'thumbPath' => '@webroot/images/[[profile]]_[[pk]].[[extension]]',
+                'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
+            ],*/
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function attributeLabels()
     {
         return [
@@ -108,31 +128,21 @@ class Bot extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public static function getBotById($id)
+    {
+        $query = self::find()->with(['comments', 'botLanguages', 'botsRating'])->where(['username' => $id, 'status' => self::STATUS_ACTIVE]);
+
+        return $query->one();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function getListAll()
     {
         $query = self::find()->where(['status' => self::STATUS_ACTIVE]);
 
         return $query->all();
-    }
-
-    /**
-     * @return yii\data\ActiveDataProvider
-     */
-    public static function getListByCategory($id)
-    {
-        $category = Category::findOne(['slug' => $id]);
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $category->getBots(),
-            'sort' => [
-                'defaultOrder' => ['id' => SORT_DESC],
-            ],
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
-
-        return $dataProvider;
     }
 
     /**
@@ -181,5 +191,13 @@ class Bot extends \yii\db\ActiveRecord
     public function getDefCategory()
     {
         return $this->hasOne(Category::className(), ['id' => 'default_category_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBotsRating()
+    {
+        return $this->hasMany(BotRating::className(), ['bot_id' => 'id']);
     }
 }

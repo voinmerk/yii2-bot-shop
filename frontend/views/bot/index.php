@@ -13,16 +13,20 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?= $this->render('_categories', ['categories' => $categories]) ?>
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-9">
+            <?php if($bots) { ?>
             <?php foreach($bots as $bot) { ?>
             <?= $this->render('_bot', ['bot' => $bot]) ?>
             <?php } ?>
-
-            <pre class="col-md-12"><?= var_dump($categories) ?></pre>
+            <?php } else { ?>
+            <div class="alert alert-danger">
+                <p><?= Yii::t('frontend', 'There is nothing in the catalog!') ?></p>
+            </div>
+            <?php } ?>
         </div>
     </div>
 </div>

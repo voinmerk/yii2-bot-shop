@@ -36,6 +36,12 @@ class Category extends \yii\db\ActiveRecord
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 
+    public $title;
+    public $content;
+    public $meta_title;
+    public $meta_keywords;
+    public $meta_description;
+
     /**
      * {@inheritdoc}
      */
@@ -66,14 +72,14 @@ class Category extends \yii\db\ActiveRecord
      */
     public function behaviors()
     {
-        $defLang = Language::getDefaultLanguage();
+        /*$defLang = Language::getDefaultLanguage();
 
         $languages = Language::find()->all();
 
-        $langList = yii\helpers\ArrayHelper::map($languages, 'id', 'name');
+        $langList = yii\helpers\ArrayHelper::map($languages, 'id', 'name');*/
 
         return [
-            'ml' => [
+            /*'ml' => [
                 'class' => MultilingualBehavior::className(),
                 'languages' => $langList,
                 'languageField' => 'language_id',
@@ -87,7 +93,7 @@ class Category extends \yii\db\ActiveRecord
                 'attributes' => [
                     'title', 'content', 'meta_title', 'meta_keywords', 'meta_description'
                 ]
-            ],
+            ],*/
         ];
     }
 
@@ -118,12 +124,39 @@ class Category extends \yii\db\ActiveRecord
             'created_at' => Yii::t('frontend', 'Created At'),
             'updated_at' => Yii::t('frontend', 'Updated At'),
 
+            // functions or query
             'title' => Yii::t('frontend', 'Title'),
             'content' => Yii::t('frontend', 'Content'),
+
+            // functions AQ
             'metaTitle' => Yii::t('frontend', 'Meta Title'),
             'metaKeywords' => Yii::t('frontend', 'Meta Keywords'),
             'metaDescription' => Yii::t('frontend', 'Meta Description'),
+
+            // query AQ
+            'meta_title' => Yii::t('frontend', 'Meta Title'),
+            'meta_keywords' => Yii::t('frontend', 'Meta Keywords'),
+            'meta_description' => Yii::t('frontend', 'Meta Description'),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getCategoryById($id)
+    {
+        $language = Language::getLanguageIdByCode(Yii::$app->language);
+
+        return self::find()
+                    ->select(['category.*', 'ct.title AS title', 'ct.meta_title AS meta_title', 'ct.content AS content', 'ct.meta_keywords AS meta_keywords', 'ct.meta_description AS meta_description'])
+                    ->joinWith([
+                        'categoryTranslates' => function($query) {
+                            return $query->from(['ct' => CategoryTranslate::tableName()]);
+                        }
+                    ])
+                    ->where(['slug' => $id, 'status' => self::STATUS_ACTIVE, 'ct.language_id' => $language])
+                    ->orderBy(['sort_order' => SORT_ASC])
+                    ->one();
     }
 
     /**
@@ -134,6 +167,7 @@ class Category extends \yii\db\ActiveRecord
         $language = Language::getLanguageIdByCode(Yii::$app->language);
 
         return self::find()
+                    ->select(['category.*', 'ct.title AS title', 'ct.meta_title AS meta_title'])
                     ->joinWith([
                         'categoryTranslates' => function($query) {
                             return $query->from(['ct' => CategoryTranslate::tableName()]);
@@ -142,23 +176,9 @@ class Category extends \yii\db\ActiveRecord
                     ->where(['status' => self::STATUS_ACTIVE, 'ct.language_id' => $language])
                     ->orderBy(['sort_order' => SORT_ASC])
                     ->all();
-    }
 
-    /**
-     * @return yii\data\ActiveDataProvider
-     */
-    public function getBotsByCategory($category)
-    {
-        $categoryId = self::findOne(['slug' => $category])->id;
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $this->hasMany(Bot::className(), ['id' => 'bot_id'])
-            ->where([
-                'status' => Bot::STATUS_ACTIVE
-            ])
-        ]);
-
-        return $dataProvider;
+        // SELECT `category`.* FROM `category` LEFT JOIN `category_translate` `ct` ON `category`.`id` = `ct`.`category_id` WHERE (`status`=1) AND (`ct`.`language_id`=1) ORDER BY `sort_order`
+        // SELECT `category`.*, `ct`.`title` AS `title` FROM `category` LEFT JOIN `category_translate` `ct` ON `category`.`id` = `ct`.`category_id` WHERE (`status`=1) AND (`ct`.`language_id`=1) ORDER BY `sort_order`
     }
 
      /**
@@ -196,42 +216,42 @@ class Category extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTitle()
+    /*public function getTitle()
     {
         return $this->categoryTranslates[0]->title;
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getContent()
+    /*public function getContent()
     {
         return $this->categoryTranslates[0]->content;
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMetaTitle()
+    /*public function getMetaTitle()
     {
         return $this->categoryTranslates[0]->meta_title;
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMetaKeywords()
+    /*public function getMetaKeywords()
     {
         return $this->categoryTranslates[0]->meta_keywords;
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMetaDescription()
+    /*public function getMetaDescription()
     {
         return $this->categoryTranslates[0]->meta_desctiption;
-    }
+    }*/
 
     /**
      * @return \omgdef\multilingual\MultilingualQuery
