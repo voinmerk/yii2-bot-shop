@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $category->title;
         </div>
 
         <div class="col-md-8">
-            <?php foreach($bots as $bot) { ?>
+            <?php foreach($dataProvider->model as $bot) { ?>
             <?= $this->render('_bot', ['bot' => $bot]) ?>
             <?php } ?>
         </div>

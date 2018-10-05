@@ -3,6 +3,8 @@
 namespace frontend\models;
 
 use Yii;
+use yii\data\ActiveDataProvider;
+
 use common\models\User;
 
 /**
@@ -27,6 +29,7 @@ class Bot extends \yii\db\ActiveRecord
 {
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
+    const START_PARAM = 'http://botshop.loc';
 
     public $category_ids = [];
     public $language_ids = [];
@@ -48,7 +51,8 @@ class Bot extends \yii\db\ActiveRecord
             [['title', 'content', 'meta_title', 'username', 'token', 'image', 'views', 'created_at', 'updated_at'], 'required'],
             [['content', 'meta_keywords', 'meta_description'], 'string'],
             [['views', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'meta_title', 'username', 'token', 'image'], 'string', 'max' => 255],
+            [['title', 'meta_title', 'username', 'token', 'image', 'start_param'], 'string', 'max' => 255],
+            ['start_param', 'default', 'value' => self::START_PARAM],
             [['username', 'token'], 'unique'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
@@ -112,23 +116,23 @@ class Bot extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * @return yii\data\ActiveDataProvider
      */
-    public static function getListByCategory($category)
+    public static function getListByCategory($id)
     {
-        $categoryId = Category::findOne(['slug' => $category])->id;
+        $category = Category::findOne(['slug' => $id]);
 
-        //$$query = self::find()->where()->
+        $dataProvider = new ActiveDataProvider([
+            'query' => $category->getBots(),
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_DESC],
+            ],
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
 
-        $query = self::find()
-                        ->joinWith([
-                            'categories' => function($q) {
-                                return $q->andWhere(['bot_to_category.id' => $categoryId]);
-                            }
-                        ])
-                        ->where(['bot.status' => self::STATUS_ACTIVE]);
-
-        return $query->all();
+        return $dataProvider;
     }
 
     /**

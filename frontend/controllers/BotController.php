@@ -11,6 +11,7 @@ use frontend\models\BotRating;
 use frontend\models\Category;
 use frontend\models\Comment;
 use frontend\models\BotLanguage;
+use frontend\models\Language;
 
 class BotController extends Controller
 {
@@ -18,6 +19,7 @@ class BotController extends Controller
     {
     	$data = [];
 
+        $data['language_id'] = Language::getLanguageIdByCode(Yii::$app->language);
         $data['categories'] = Category::getList();
         $data['bots'] = Bot::findAll(['status' => Bot::STATUS_ACTIVE]);
 
@@ -28,9 +30,10 @@ class BotController extends Controller
     {
     	$data = [];
 
+        $data['language_id'] = Language::getLanguageIdByCode(Yii::$app->language);
         $data['category'] = Category::findOne(['slug' => $category]);
         $data['categories'] = Category::getList();
-        $data['bots'] = Bot::findAll(['status' => Bot::STATUS_ACTIVE]);//Bot::getListByCategory($category); //
+        $data['dataProvider'] = Bot::getListByCategory($category); //Bot::findAll(['status' => Bot::STATUS_ACTIVE]);//
 
     	return $this->render('category', $data);
     }

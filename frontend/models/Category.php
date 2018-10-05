@@ -2,7 +2,12 @@
 namespace frontend\models;
 
 use Yii;
+use yii\data\ActiveDataProvider;
+
 use common\models\User;
+
+use omgdef\multilingual\MultilingualBehavior;
+use omgdef\multilingual\MultilingualQuery;
 
 /**
  * This is the model class for table "{{%category}}".
@@ -59,6 +64,36 @@ class Category extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public function behaviors()
+    {
+        $defLang = Language::getDefaultLanguage();
+
+        $languages = Language::find()->all();
+
+        $langList = yii\helpers\ArrayHelper::map($languages, 'id', 'name');
+
+        return [
+            'ml' => [
+                'class' => MultilingualBehavior::className(),
+                'languages' => $langList,
+                'languageField' => 'language_id',
+                //'localizedPrefix' => '',
+                //'requireTranslations' => false',
+                //'dynamicLangClass' => true',
+                'langClassName' => CategoryTranslate::className(), // or namespace/for/a/class/PostLang
+                'defaultLanguage' => $defLang->id, // $defLang
+                'langForeignKey' => 'category_id',
+                'tableName' => CategoryTranslate::tableName(),
+                'attributes' => [
+                    'title', 'content', 'meta_title', 'meta_keywords', 'meta_description'
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function attributeLabels()
     {
         return [
@@ -82,7 +117,6 @@ class Category extends \yii\db\ActiveRecord
             'updated_by' => Yii::t('frontend', 'Updated By'),
             'created_at' => Yii::t('frontend', 'Created At'),
             'updated_at' => Yii::t('frontend', 'Updated At'),
-
 
             'title' => Yii::t('frontend', 'Title'),
             'content' => Yii::t('frontend', 'Content'),
@@ -108,6 +142,23 @@ class Category extends \yii\db\ActiveRecord
                     ->where(['status' => self::STATUS_ACTIVE, 'ct.language_id' => $language])
                     ->orderBy(['sort_order' => SORT_ASC])
                     ->all();
+    }
+
+    /**
+     * @return yii\data\ActiveDataProvider
+     */
+    public function getBotsByCategory($category)
+    {
+        $categoryId = self::findOne(['slug' => $category])->id;
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $this->hasMany(Bot::className(), ['id' => 'bot_id'])
+            ->where([
+                'status' => Bot::STATUS_ACTIVE
+            ])
+        ]);
+
+        return $dataProvider;
     }
 
      /**
@@ -180,5 +231,13 @@ class Category extends \yii\db\ActiveRecord
     public function getMetaDescription()
     {
         return $this->categoryTranslates[0]->meta_desctiption;
+    }
+
+    /**
+     * @return \omgdef\multilingual\MultilingualQuery
+     */
+    public static function find()
+    {
+        return new MultilingualQuery(get_called_class());
     }
 }

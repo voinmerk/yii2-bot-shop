@@ -21,6 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php foreach($bots as $bot) { ?>
             <?= $this->render('_bot', ['bot' => $bot]) ?>
             <?php } ?>
+
+            <pre class="col-md-12"><?= var_dump($categories) ?></pre>
         </div>
     </div>
 </div>

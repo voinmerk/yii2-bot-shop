@@ -80,6 +80,14 @@ class Language extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public static function getDefaultLanguage()
+    {
+        return self::find()->where(['default' => 1])->one();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function getLanguages()
     {
         $languages = self::find()

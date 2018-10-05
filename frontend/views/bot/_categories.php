@@ -9,7 +9,7 @@ $menuItems = [];
 
 foreach($categories as $category) {
     $menuItems[] = [
-        'label' => $category->title,
+        'label' => $category->title . ' (' . $category->getBots()->count() . ') ',
         'url' => Url::to(['bot/category', 'category' => $category->slug]),
         'options' => ['class' => 'list-group-item'],
         'active' => Yii::$app->request->get('category') == $category->slug,

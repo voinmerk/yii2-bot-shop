@@ -22,7 +22,8 @@
         "kartik-v/yii2-widget-rating": "dev-master",
         "codemix/yii2-localeurls": "^1.7",
         "valiant/yii2-list-group-widget": "*",
-        "omgdef/yii2-multilingual-behavior": "^2.1"
+        "omgdef/yii2-multilingual-behavior": "^2.1",
+        "longman/telegram-bot": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
