@@ -23,7 +23,9 @@
         "codemix/yii2-localeurls": "^1.7",
         "valiant/yii2-list-group-widget": "*",
         "omgdef/yii2-multilingual-behavior": "^2.1",
-        "longman/telegram-bot": "*"
+        "longman/telegram-bot": "*",
+        "yiimaker/yii2-gii-migration": "^1.1",
+        "insolita/yii2-migration-generator": "~3.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
