@@ -15,7 +15,6 @@ use frontend\models\Language;
  */
 class SiteController extends Controller
 {
-    static $languages;
     /**
      * {@inheritdoc}
      */

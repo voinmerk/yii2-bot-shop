@@ -8,7 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-botshop-public',
-    'name' => 'BotSpy',
+    'name' => '🙃 BotSpy',
     'basePath' => dirname(__DIR__),
     'sourceLanguage' => 'en',
     'bootstrap' => ['log', 'languages'],

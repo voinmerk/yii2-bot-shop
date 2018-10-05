@@ -59,6 +59,9 @@ $menuItems = [];
 $items = array();
 
 foreach (Language::getLanguages() as $language) {
+    if ($language['code'] == Yii::$app->language)
+        continue;
+        
     $items[] = ['label' => $language['name'], 'url' => ['languages/default/index', 'lang' => $language['code']]];
 }
 
