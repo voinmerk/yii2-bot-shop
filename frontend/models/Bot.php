@@ -140,9 +140,18 @@ class Bot extends \yii\db\ActiveRecord
      */
     public static function getListAll()
     {
-        $query = self::find()->where(['status' => self::STATUS_ACTIVE]);
+        $query = self::find()->with(['botsRating'])->where(['status' => self::STATUS_ACTIVE]);
 
         return $query->all();
+    }
+
+    public static function getBotBySearchText($q)
+    {
+        return self::find()
+                    ->with(['botsRating'])
+                    ->where(['status' => self::STATUS_ACTIVE])
+                    ->andWhere(['or', ['like', 'title', $q], ['like', 'content', $q]])
+                    ->all();
     }
 
     /**

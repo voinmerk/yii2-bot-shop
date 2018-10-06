@@ -33,6 +33,12 @@ $this->params['breadcrumbs'][] = Yii::t('frontend', 'Add bot');
 
             <?= $form->field($model, 'title')->textInput() ?>
 
+            <?= $form->field($model, 'username')->textInput() ?>
+
+            <?php /* $form->field($model, 'username', [
+                'template' => "{label}\n<div class=\"input-group\">{input}\n<span class=\"input-group-btn\"><button class=\"btn btn-default\" type=\"button\"><span class=\"glyphicon glyphicon-refresh\" aria-hidden=\"true\"></span></button></span></div>\n{hint}\n{error}"
+            ]) */?>
+
             <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
 
             <?= $form->field($model, 'image')->fileInput() ?>

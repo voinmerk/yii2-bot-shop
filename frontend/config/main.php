@@ -48,6 +48,8 @@ return [
             'showScriptName' => false,
             'rules' => [
                 'languages' => 'languages/default/index',
+
+                'catalog/search' => 'bot/search',
                 'catalog/<category:[\w_-]+>/<bot:[\w_-]+>' => 'bot/view',
                 'catalog/<category:[\w_-]+>' => 'bot/category',
                 'catalog' => 'bot/index',

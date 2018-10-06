@@ -15,6 +15,19 @@ use frontend\models\Language;
 
 class BotController extends Controller
 {
+    public function beforeAction($action)
+    {
+        $model = new \frontend\models\forms\SearchForm;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $q = \yii\helpers\Html::encode($model->q);
+
+            return $this->redirect(['bot/search', 'q' => $q]);
+        }
+
+        return true;
+    }
+
     public function actionIndex()
     {
     	$data = [];
@@ -64,5 +77,19 @@ class BotController extends Controller
         $data['bot'] = $bot;
 
     	return $this->render('view', $data);
+    }
+
+    public function actionSearch($q)
+    {
+        $data = [];
+
+        //$q = Yii::$app->request->get('q');
+
+        $data['search'] = $q;
+        $data['language_id'] = Language::getLanguageIdByCode(Yii::$app->language);
+        $data['categories'] = Category::getList();
+        $data['bots'] = Bot::getBotBySearchText($q);
+
+        return $this->render('search', $data);
     }
 }

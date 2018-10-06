@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use rmrevin\yii\fontawesome\FA;
@@ -38,6 +39,14 @@ $isActive = function($controller, $action, $onlyController = false) {
     $this->registerJs($js);
 }*/
 
+$model = new \frontend\models\forms\SearchForm;
+
+$this->beginBlock('search');
+    $form = ActiveForm::begin();
+    echo $form->field($model, 'q')->textInput()->label(false);
+    ActiveForm::end();
+$this->endBlock();
+
 NavBar::begin([
     'brandLabel' => Yii::$app->name,
     'brandUrl' => Yii::$app->homeUrl,
@@ -61,13 +70,18 @@ $items = array();
 foreach (Language::getLanguages() as $language) {
     if ($language['code'] == Yii::$app->language)
         continue;
-        
+
     $items[] = ['label' => $language['name'], 'url' => ['languages/default/index', 'lang' => $language['code']]];
 }
 
 $menuItems[] = [
     'label' => Language::getLanguageNameByCode(Yii::$app->language),
     'items' => $items,
+];
+
+$menuItems[] = [
+    'label' => FA::icon('search'),
+    'items' => [$this->blocks['search']],
 ];
 
 if ($isGuest) {

@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         127.0.0.1
--- Версия сервера:               5.7.20 - MySQL Community Server (GPL)
+-- Версия сервера:               5.7.16 - MySQL Community Server (GPL)
 -- Операционная система:         Win64
 -- HeidiSQL Версия:              9.5.0.5196
 -- --------------------------------------------------------
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `bot_to_category` (
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.bot_to_category: ~1 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.bot_to_category: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `bot_to_category` DISABLE KEYS */;
 INSERT INTO `bot_to_category` (`bot_id`, `category_id`) VALUES
 	(1, 5);
@@ -457,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   CONSTRAINT `fk_message_source_message` FOREIGN KEY (`id`) REFERENCES `source_message` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Дамп данных таблицы yii_botshop_advanced.message: ~26 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.message: ~38 rows (приблизительно)
 /*!40000 ALTER TABLE `message` DISABLE KEYS */;
 INSERT INTO `message` (`id`, `language`, `translation`) VALUES
 	(1, 'en', 'Sign in to start your session'),
@@ -497,7 +497,11 @@ INSERT INTO `message` (`id`, `language`, `translation`) VALUES
 	(18, 'en', 'The above error occurred while the Web server was processing your request.'),
 	(18, 'ru', 'Вышеуказанная ошибка произошла во время обработки запроса веб-сервером.'),
 	(19, 'en', 'Please contact us if you think this is a server error. Thank you!'),
-	(19, 'ru', 'Пожалуйста, свяжитесь с нами, если вы думаете, что это ошибка сервера. Спасибо!');
+	(19, 'ru', 'Пожалуйста, свяжитесь с нами, если вы думаете, что это ошибка сервера. Спасибо!'),
+	(20, 'en', 'At your request, nothing found!'),
+	(20, 'ru', 'По вашему запросу, ничего не найдено!'),
+	(21, 'en', 'Response to query: {query}'),
+	(21, 'ru', 'Ответ по запросу: {query}');
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.migration
@@ -524,9 +528,9 @@ CREATE TABLE IF NOT EXISTS `source_message` (
   `message` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `idx_source_message_category` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Дамп данных таблицы yii_botshop_advanced.source_message: ~13 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.source_message: ~19 rows (приблизительно)
 /*!40000 ALTER TABLE `source_message` DISABLE KEYS */;
 INSERT INTO `source_message` (`id`, `category`, `message`) VALUES
 	(1, 'backend', 'Sign in to start your session'),
@@ -547,7 +551,9 @@ INSERT INTO `source_message` (`id`, `category`, `message`) VALUES
 	(16, 'frontend', 'This category does not exist!'),
 	(17, 'frontend', 'This bot does not exist!'),
 	(18, 'frontend', 'The above error occurred while the Web server was processing your request.'),
-	(19, 'frontend', 'Please contact us if you think this is a server error. Thank you!');
+	(19, 'frontend', 'Please contact us if you think this is a server error. Thank you!'),
+	(20, 'frontend', 'At your request, nothing found!'),
+	(21, 'frontend', 'Response to query: {query}');
 /*!40000 ALTER TABLE `source_message` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.user

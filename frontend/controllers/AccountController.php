@@ -22,7 +22,7 @@ class AccountController extends Controller
 
     public function actionAddBot()
     {
-        $model = new Bot();
+        $model = new \frontend\models\forms\AddBotForm();
 
         $categories = Category::find()->select(['id', 'slug'])->where(['status' => Category::STATUS_ACTIVE])->all();
         $languages = BotLanguage::find()->all();
