@@ -42,7 +42,7 @@ $isActive = function($controller, $action, $onlyController = false) {
 $model = new \frontend\models\forms\SearchForm;
 
 $this->beginBlock('search');
-    $form = ActiveForm::begin();
+    $form = ActiveForm::begin(['id' => 'form-search', 'action' => ['/bot']]);
     echo $form->field($model, 'q')->textInput()->input('q', ['placeholder' => Yii::t('frontend', 'Search...')])->label(false);
     ActiveForm::end();
 $this->endBlock();
