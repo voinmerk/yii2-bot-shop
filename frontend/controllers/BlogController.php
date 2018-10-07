@@ -1,20 +1,31 @@
 <?php
 namespace frontend\controllers;
 
-class BlogController extends \yii\web\Controller
+use Yii;
+use yii\base\InvalidParamException;
+use yii\web\BadRequestHttpException;
+use yii\web\Controller;
+
+class BlogController extends Controller
 {
     public function actionPost()
     {
-        return $this->render('index');
+        $data = [];
+
+        return $this->render('index', $data);
     }
 
-    public function actionArticle()
+    public function actionCategory($category)
     {
-        return $this->render('article');
+        $data = [];
+
+        return $this->render('category', $data);
     }
 
-    public function actionView()
+    public function actionView($category, $post)
     {
-        return $this->render('view');
+        $data = [];
+
+        return $this->render('view', $data);
     }
 }

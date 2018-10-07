@@ -43,7 +43,7 @@ $model = new \frontend\models\forms\SearchForm;
 
 $this->beginBlock('search');
     $form = ActiveForm::begin();
-    echo $form->field($model, 'q')->textInput()->label(false);
+    echo $form->field($model, 'q')->textInput()->input('q', ['placeholder' => Yii::t('frontend', 'Search...')])->label(false);
     ActiveForm::end();
 $this->endBlock();
 
@@ -64,8 +64,7 @@ echo Nav::widget([
     'items' => $menuItems,
 ]);
 $menuItems = [];
-
-$items = array();
+$items = [];
 
 foreach (Language::getLanguages() as $language) {
     if ($language['code'] == Yii::$app->language)
@@ -81,7 +80,11 @@ $menuItems[] = [
 
 $menuItems[] = [
     'label' => FA::icon('search'),
-    'items' => [$this->blocks['search']],
+    'items' => [
+        ['label' => $this->blocks['search']],
+        //'options' => ['class' => 'my-class'],
+    ],
+    'options' => ['class' => 'item-search-form'],
 ];
 
 if ($isGuest) {

@@ -145,6 +145,9 @@ class Bot extends \yii\db\ActiveRecord
         return $query->all();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getBotBySearchText($q)
     {
         return self::find()
@@ -192,6 +195,14 @@ class Bot extends \yii\db\ActiveRecord
     public function getBotLanguages()
     {
         return $this->hasMany(BotLanguage::className(), ['id' => 'bot_language_id'])->viaTable('bot_to_bot_language', ['bot_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBotTags()
+    {
+        return $this->hasMany(BotTag::className(), ['id' => 'tag_id'])->viaTable('bot_to_bot_tag', ['bot_id' => 'id']);
     }
 
     /**

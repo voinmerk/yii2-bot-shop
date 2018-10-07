@@ -123,6 +123,27 @@ a.desc:after {
     outline: none;
 }
 
+.item-search-form .dropdown-menu {
+    padding: 0;
+    width: 400px;
+}
+
+.item-search-form .dropdown-header {
+    padding: 5px;
+}
+
+.item-search-form .form-control {
+    border-radius: 0;
+}
+
+.item-search-form .help-block {
+    display: none;
+}
+
+.item-search-form .form-group {
+    margin: 0;
+}
+
 .oauth-button {
     padding-top: 12px;
 }

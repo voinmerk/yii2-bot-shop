@@ -47,15 +47,18 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // Language module
+                'languages/<lang:w+>' => 'languages/default/index',
                 'languages' => 'languages/default/index',
 
+                // Catalog - bot controller
                 'catalog/search' => 'bot/search',
                 'catalog/<category:[\w_-]+>/<bot:[\w_-]+>' => 'bot/view',
                 'catalog/<category:[\w_-]+>' => 'bot/category',
                 'catalog' => 'bot/index',
                 '' => 'bot/index',
 
-                'language/<id:\w+>' => 'site/language',
+                //'http://<lang:\w+>.botshop.loc/<controller>/<action>' => '<controller>/<action>',
             ],
         ],
         'i18n' => [

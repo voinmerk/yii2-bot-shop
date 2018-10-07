@@ -3,13 +3,17 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = Yii::t('frontend', 'Blogs') . '';
+$this->title = Yii::t('frontend', 'Blogs') . ' - ' . $category->title;
 
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = [
+    'label' => Yii::t('frontend', 'Blogs'),
+    'url' => ['blog/index'],
+];
+$this->params['breadcrumbs'][] = $category->title;
 ?>
 <div class="blog-index">
     <div class="page-header">
-        <h1><?= $this->title ?></h1>
+        <h1><?= $category->title ?></h1>
     </div>
 
     <div class="row">
@@ -20,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-md-9">
             <?php if($posts) { ?>
             <?php foreach($posts as $post) { ?>
-            <?= $this->render('_post', ['post' => $post]) ?>
+            <?= $this->render('_post', ['post' => $post, 'category' => $category]) ?>
             <?php } ?>
             <?php } else { ?>
             <div class="alert alert-danger">
