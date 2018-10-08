@@ -64,6 +64,16 @@ echo Nav::widget([
     'items' => $menuItems,
 ]);
 $menuItems = [];
+
+$menuItems[] = [
+    'label' => FA::icon('search'),
+    'items' => [
+        ['label' => $this->blocks['search']],
+        //'options' => ['class' => 'my-class'],
+    ],
+    'options' => ['class' => 'item-search-form'],
+];
+
 $items = [];
 
 foreach (Language::getLanguages() as $language) {
@@ -76,15 +86,6 @@ foreach (Language::getLanguages() as $language) {
 $menuItems[] = [
     'label' => Language::getLanguageNameByCode(Yii::$app->language),
     'items' => $items,
-];
-
-$menuItems[] = [
-    'label' => FA::icon('search'),
-    'items' => [
-        ['label' => $this->blocks['search']],
-        //'options' => ['class' => 'my-class'],
-    ],
-    'options' => ['class' => 'item-search-form'],
 ];
 
 if ($isGuest) {

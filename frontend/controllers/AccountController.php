@@ -2,6 +2,8 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\base\InvalidParamException;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
 use frontend\models\Bot;
@@ -17,7 +19,13 @@ class AccountController extends Controller
 
     public function actionBots()
     {
-        return $this->render('bots');
+        $data = [];
+
+        $data['bots'] = Bot::find()->where(['added_by' => Yii::$app->user->identity->id])->all();
+
+        //die(var_dump($data['bots']));
+
+        return $this->render('bots', $data);
     }
 
     public function actionAddBot()
@@ -40,5 +48,18 @@ class AccountController extends Controller
     public function actionSetting()
     {
         return $this->render('setting');
+    }
+
+    public function actionBotUpdate($bot)
+    {
+        $data = [];
+
+        $data['bot'] = Bot::findOne(['username' => $bot]);
+
+        if(!$data['bot']) {
+            throw new BadRequestHttpException(Yii::t('frontend', 'This bot does not exist!'));
+        }
+
+        return $this->render('bot-update', $data);
     }
 }

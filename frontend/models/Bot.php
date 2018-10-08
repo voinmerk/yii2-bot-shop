@@ -17,8 +17,9 @@ use common\models\User;
  * @property string token
  * @property string $image
  * @property int $views
- * @property int $created_by
- * @property int $updated_by
+ * @property int $author_by ~ Автор бота
+ * @property int $added_by ~ Пользователь который добавил бота
+ * @property int $moderated_by ~ Админ который модерировал бота
  * @property int $created_at
  * @property int $updated_at
  *
@@ -56,8 +57,9 @@ class Bot extends \yii\db\ActiveRecord
             [['username', 'token'], 'unique'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
-            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
-            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
+            [['author_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_by' => 'id']],
+            [['added_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['added_by' => 'id']],
+            [['moderated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['moderated_by' => 'id']],
         ];
     }
 
@@ -160,17 +162,25 @@ class Bot extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUpdatedBy()
+    public function getAuthorBy()
     {
-        return $this->hasOne(User::className(), ['id' => 'updated_by']);
+        return $this->hasOne(User::className(), ['id' => 'author_by']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCreatedBy()
+    public function getAddedBy()
     {
-        return $this->hasOne(User::className(), ['id' => 'created_by']);
+        return $this->hasOne(User::className(), ['id' => 'added_by']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getModeratedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'moderated_by']);
     }
 
     /**
@@ -219,5 +229,20 @@ class Bot extends \yii\db\ActiveRecord
     public function getBotsRating()
     {
         return $this->hasMany(BotRating::className(), ['bot_id' => 'id']);
+    }
+
+    public function getStatusList()
+    {
+        return [
+            Yii::t('frontend', 'Unpublished'),
+            Yii::t('frontend', 'Published'),
+        ];
+    }
+
+    public function getStatusName()
+    {
+        $statusList = $this->getStatusList();
+
+        return $statusList($this->status);
     }
 }

@@ -14,6 +14,8 @@ $this->params['breadcrumbs'][] = [
     'url' => Url::to(['account/index']),
 ];
 $this->params['breadcrumbs'][] = Yii::t('frontend', 'Bots');
+
+$botCount = 0;
 ?>
 <div class="account-index">
     <div class="page-header">
@@ -26,7 +28,31 @@ $this->params['breadcrumbs'][] = Yii::t('frontend', 'Bots');
         </div>
 
         <div class="col-md-8">
-            <h2>Content</h2>
+            <div class="mubots-list">
+                <?php if($bots) { ?>
+                <table class="table table-striped">
+                    <tr>
+                        <th>#</th>
+                        <th><?= Yii::t('frontend', 'Avatar') ?></th>
+                        <th><?= Yii::t('frontend', 'Bot name') ?></th>
+                        <th><?= Yii::t('frontend', 'Bot login') ?></th>
+                        <th><?= Yii::t('frontend', 'Rating') ?></th>
+                        <th><?= Yii::t('frontend', 'Status') ?></th>
+                        <th class="text-right"><?= Yii::t('yii', 'Update') ?></th>
+                    </tr>
+                    <?php foreach($bots as $bot) { ?>
+                    <?php $botCount++; ?>
+                    <?= $this->render('_bot', ['bot' => $bot, 'botCount' => $botCount]) ?>
+                    <?php } ?>
+                    </table>
+                <?php } else { ?>
+                <div class="alert alert-info">
+                    <?= Yii::t('frontend', 'You have not added a single bot, you can do this by clicking on the link: {link}', [
+                        'link' => Html::a(Yii::t('frontend', 'Added bot'), ['account/add-bot']),
+                    ]) ?>
+                </div>
+                <?php } ?>
+            </div>
         </div>
     </div>
 </div>

@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $search;
 ?>
 <div class="catalog-search">
     <div class="page-header">
-        <h1><?= Yii::t('frontend', 'Response to query: {query}', ['query' => $search]) ?></h1>
+        <h1><?= Yii::t('frontend', 'Response to query: {query}', ['query' => $search, /*'<i><b>' . $search . '</b></i>'*/]) ?></h1>
     </div>
 
     <div class="row">

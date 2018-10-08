@@ -58,6 +58,9 @@ return [
                 'catalog' => 'bot/index',
                 '' => 'bot/index',
 
+                // Account controller
+                'account/bot-update/<bot:[\w_-]+>' => 'account/bot-update',
+
                 //'http://<lang:\w+>.botshop.loc/<controller>/<action>' => '<controller>/<action>',
             ],
         ],
