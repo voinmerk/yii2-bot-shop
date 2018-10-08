@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
 use frontend\models\Bot;
 use frontend\models\Category;
 use frontend\models\BotLanguage;
+use frontend\models\forms\AddBotForm;
 
 class AccountController extends Controller
 {
@@ -44,8 +45,6 @@ class AccountController extends Controller
 
         $data['bots'] = Bot::find()->where(['added_by' => Yii::$app->user->identity->id])->all();
 
-        //die(var_dump($data['bots']));
-
         return $this->render('bots', $data);
     }
 
@@ -55,7 +54,7 @@ class AccountController extends Controller
 
         $request = Yii::$app->request;
 
-        $model = new \frontend\models\forms\AddBotForm();
+        $model = new AddBotForm;
 
         if ($request->isPost) {
             if ($model->load($request->post())) {
@@ -67,16 +66,11 @@ class AccountController extends Controller
                     $model->image = $imagePath;
                 }
 
-                //die(var_dump($model->image) . '123');
-
                 if ($model->addBot()) {
                     Yii::$app->session->setFlash('success', Yii::t('frontend', 'The bot has been successfully added!'));
 
                     return $this->redirect(['account/bots']);
                 } else {
-                    //exit('error');
-                    //die(var_dump($model));
-
                     $data['error_warning'] = implode('<br>', $model->errors);
                 }
             }

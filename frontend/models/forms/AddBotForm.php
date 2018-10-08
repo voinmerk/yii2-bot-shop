@@ -107,8 +107,6 @@ class AddBotForm extends Model
 
                 return true;
             }
-        } else {
-            die(var_dump($model->image));
         }
 
         return false;
