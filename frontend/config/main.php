@@ -14,6 +14,10 @@ return [
     'bootstrap' => ['log', 'languages'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'bot' => [
+            'class' => 'SonkoDmitry\Yii\TelegramBot\Component',
+            'apiToken' => '460767342:AAH19VjZoIIO7OWB53P7SI93w6rFPjKyKrc',
+        ],
         'request' => [
             'csrfParam' => '_csrf-public',
             'baseUrl' => '',

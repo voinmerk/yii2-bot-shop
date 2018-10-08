@@ -3,6 +3,7 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 use kartik\rating\StarRating;
+use rmrevin\yii\fontawesome\FA;
 
 $this->title = Yii::t('frontend', 'Catalog') . ' - ' . $bot->meta_title;
 
@@ -23,25 +24,31 @@ $this->params['breadcrumbs'][] = $bot->title;
 
     <div class="row">
         <div class="col-md-3">
-            <h4>Поддерживаемые языки:</h4>
-            <?php foreach($bot->botLanguages as $language) { ?>
-            <p class="label label-success"><?= $language->name ?></p>
-            <?php } ?>
+            <div class="bot-avatar">
+                <p class="text-center"><?= Html::img('@web/uploads/bots/' . $bot->image, ['style' => 'border-radius:50%;max-width:150px;width:100%;']) ?></p>
+                <p class="text-center"><?= StarRating::widget([
+                    'name' => 'rating_' . $bot->id,
+                    'value' => 3,
+                    'language' => Yii::$app->language,
+                    'pluginOptions' => [
+                        //'disabled' => true,
+                        'showClear' => false,
+                        'showCaption' => false,
+                        'step' => 1,
+                    ],
+                ]); ?></p>
+                <p class="text-center"><?= Html::a(Yii::t('frontend', 'Add to {icon}', ['icon' => Fa::icon('telegram')]), 'https://telegram.me/' . $bot->username, ['class' => 'btn btn-primary btn-flat', 'style' => 'font-size: 18px;', 'target' => '_blank']) ?></p>
+            </div>
+            <div class="bot-languages">
+                <h4>Поддерживаемые языки:</h4>
+                <?php foreach($bot->botLanguages as $language) { ?>
+                <p class="label label-success"><?= $language->name ?></p>
+                <?php } ?>
+            </div>
         </div>
 
         <div class="col-md-9">
             <h3>Описание:</h3>
-            <p><?= StarRating::widget([
-                'name' => 'rating_' . $bot->id,
-                'value' => 3,
-                'language' => Yii::$app->language,
-                'pluginOptions' => [
-                    //'disabled' => true,
-                    'showClear' => false,
-                    'showCaption' => false,
-                    'step' => 1,
-                ],
-            ]); ?></p>
             <?= $bot->content ?>
         </div>
     </div>

@@ -69,7 +69,9 @@ class AuthController extends Controller
             $user->save();
         }
 
-        Yii::$app->user->login($user, 3600 * 24 * 30);
+        if(Yii::$app->user->login($user, 3600 * 24 * 30)) {
+            Yii::$app->bot->sendMessage($user->id, 'Успешная авторизация на сайте http://botshop.loc');
+        }
 
         return $this->goHome();
     }

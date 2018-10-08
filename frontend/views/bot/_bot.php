@@ -33,7 +33,7 @@ use kartik\rating\StarRating;
             </p>
         </div>
         <div class="panel-footer clearfix">
-            <?= Html::a(Fa::icon('eye'), Url::to(['bot/view', 'category' => isset($category) ? $category->slug : $bot->defCategory->slug, 'bot' => $bot->username]), ['class' => 'btn btn-primary btn-flat pull-left']) ?>
+            <?= Html::a(Fa::icon('eye'), Url::to(['bot/view', 'category' => isset($category) ? $category->slug : $bot->defCategory->slug, 'bot' => $bot->username]), ['class' => 'btn btn-primary btn-flat pull-left', 'data-toggle' => 'tooltip', 'title' => Yii::t('yii', 'View')]) ?>
             <?= Html::a(Yii::t('frontend', 'Add to {icon}', ['icon' => Fa::icon('telegram')]), 'https://telegram.me/' . $bot->username, ['class' => 'btn btn-success btn-flat pull-right', 'target' => '_blank']) ?>
         </div>
     </div>

@@ -26,7 +26,8 @@
         "longman/telegram-bot": "*",
         "yiimaker/yii2-gii-migration": "^1.1",
         "insolita/yii2-migration-generator": "~3.0",
-        "yii-dream-team/yii2-upload-behavior": "*"
+        "yii-dream-team/yii2-upload-behavior": "*",
+        "sonko-dmitry/yii2-telegram-bot-api": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

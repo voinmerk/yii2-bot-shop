@@ -17,6 +17,7 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         'js/jquery.magnific-popup.min.js',
+        'js/select.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

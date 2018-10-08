@@ -76,6 +76,17 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+    public function afterSave($insert, $changedAttributes){
+        parent::afterSave($insert, $changedAttributes);
+
+        $auth = Yii::$app->authManager;
+        $user = $auth->getRole('user');
+        $auth->assign($user, $this->id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);

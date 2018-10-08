@@ -43,11 +43,11 @@ $this->params['breadcrumbs'][] = Yii::t('frontend', 'Add bot');
 
             <?= $form->field($model, 'image')->fileInput() ?>
 
-            <?= $form->field($model, 'default_category_id')->dropDownList($categoryList, ['prompt' => '-- Выбор категории --']) ?>
+            <?= $form->field($model, 'default_category_id')->dropDownList($categoryList, ['prompt' => '-- Выбор категории --', 'class' => 'turnintodropdown']) ?>
 
-            <?= $form->field($model, 'category_ids')->dropDownList($categoryList, ['multiple' => true]) ?>
+            <?= $form->field($model, 'category_ids')->dropDownList($categoryList, ['multiple' => true, 'class' => 'turnintodropdown']) ?>
 
-            <?= $form->field($model, 'language_ids')->dropDownList($botLanguageList, ['multiple' => true]) ?>
+            <?= $form->field($model, 'language_ids')->dropDownList($botLanguageList, ['multiple' => true, 'class' => 'turnintodropdown']) ?>
 
             <?= $form->field($model, 'token')->textInput() ?>
 
