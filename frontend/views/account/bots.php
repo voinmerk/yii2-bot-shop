@@ -28,6 +28,12 @@ $botCount = 0;
         </div>
 
         <div class="col-md-8">
+            <?php if(isset($success)) { ?>
+            <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> <?= $success ?>
+                <button type="button" class="close" data-dismiss="alert">×</button>
+            </div>
+            <?php } ?>
+
             <div class="mubots-list">
                 <?php if($bots) { ?>
                 <table class="table table-striped">

@@ -49,14 +49,15 @@ class Bot extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'content', 'meta_title', 'username', 'token', 'image', 'views', 'created_at', 'updated_at'], 'required'],
+            [['title', 'content', 'meta_title', 'username', 'image'], 'required'],
             [['content', 'meta_keywords', 'meta_description'], 'string'],
-            [['views', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['title', 'meta_title', 'username', 'token', 'image', 'start_param'], 'string', 'max' => 255],
+            [['views', 'status', 'author_by', 'added_by', 'moderated_by', 'created_at', 'updated_at', 'default_category_id'], 'integer'],
             ['start_param', 'default', 'value' => self::START_PARAM],
             [['username', 'token'], 'unique'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
+            [['default_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['default_category_id' => 'id']],
             [['author_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_by' => 'id']],
             [['added_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['added_by' => 'id']],
             [['moderated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['moderated_by' => 'id']],
@@ -69,17 +70,9 @@ class Bot extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            /*[
-                'class' => \yiidreamteam\upload\ImageUploadBehavior::className(),
-                'attribute' => 'image',
-                'thumbs' => [
-                    'thumb' => ['width' => 500, 'height' => 500],
-                ],
-                'filePath' => '@webroot/images/[[pk]].[[extension]]',
-                'fileUrl' => '/images/[[pk]].[[extension]]',
-                'thumbPath' => '@webroot/images/[[profile]]_[[pk]].[[extension]]',
-                'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
-            ],*/
+            'timestamp' => [
+                'class' => \yii\behaviors\TimestampBehavior::className(),
+            ],
         ];
     }
 
@@ -89,23 +82,6 @@ class Bot extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            /*
-            'id' => Yii::t('frontend', 'ID'),
-            'title' => Yii::t('frontend', 'Title'),
-            'content' => Yii::t('frontend', 'Content'),
-            'meta_title' => Yii::t('frontend', 'Meta Title'),
-            'meta_keywords' => Yii::t('frontend', 'Meta Keywords'),
-            'meta_description' => Yii::t('frontend', 'Meta Description'),
-            'username' => Yii::t('frontend', 'Username'),
-            'image' => Yii::t('frontend', 'Image'),
-            'views' => Yii::t('frontend', 'Views'),
-            'default_category_id' => Yii::t('frontend', 'Default Category Id'),
-            'created_by' => Yii::t('frontend', 'Created By'),
-            'updated_by' => Yii::t('frontend', 'Updated By'),
-            'created_at' => Yii::t('frontend', 'Created At'),
-            'updated_at' => Yii::t('frontend', 'Updated At'),
-            */
-
             'id' => Yii::t('frontend', 'ID'),
             'title' => Yii::t('frontend', 'Имя бота'),
             'content' => Yii::t('frontend', 'Описание'),
@@ -117,8 +93,9 @@ class Bot extends \yii\db\ActiveRecord
             'image' => Yii::t('frontend', 'Изображение (аватар)'),
             'views' => Yii::t('frontend', 'Views'),
             'default_category_id' => Yii::t('frontend', 'Категория по умолчанию'),
-            'created_by' => Yii::t('frontend', 'Created By'),
-            'updated_by' => Yii::t('frontend', 'Updated By'),
+            'author_by' => Yii::t('frontend', 'Author By'),
+            'added_by' => Yii::t('frontend', 'Added By'),
+            'moderated_by' => Yii::t('frontend', 'Moderated By'),
             'created_at' => Yii::t('frontend', 'Created At'),
             'updated_at' => Yii::t('frontend', 'Updated At'),
 

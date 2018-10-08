@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         127.0.0.1
--- Версия сервера:               5.7.20 - MySQL Community Server (GPL)
+-- Версия сервера:               5.7.16 - MySQL Community Server (GPL)
 -- Операционная система:         Win64
 -- HeidiSQL Версия:              9.5.0.5196
 -- --------------------------------------------------------
@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `bot` (
   `meta_keywords` text,
   `meta_description` text,
   `username` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `token` varchar(255) DEFAULT NULL,
   `start_param` varchar(255) DEFAULT NULL,
   `image` varchar(255) NOT NULL,
   `views` int(11) NOT NULL DEFAULT '0',
@@ -276,8 +276,8 @@ CREATE TABLE IF NOT EXISTS `bot` (
   `author_by` int(11) DEFAULT NULL,
   `added_by` int(11) DEFAULT NULL,
   `moderated_by` int(11) DEFAULT NULL,
-  `created_at` int(11) NOT NULL,
-  `updated_at` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL DEFAULT '0',
+  `updated_at` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`username`),
   UNIQUE KEY `token` (`token`),
@@ -289,12 +289,13 @@ CREATE TABLE IF NOT EXISTS `bot` (
   CONSTRAINT `FK_bot_user_added` FOREIGN KEY (`added_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_bot_user_author` FOREIGN KEY (`author_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_bot_user_moderated` FOREIGN KEY (`moderated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.bot: ~0 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.bot: ~3 rows (приблизительно)
 /*!40000 ALTER TABLE `bot` DISABLE KEYS */;
 INSERT INTO `bot` (`id`, `title`, `content`, `meta_title`, `meta_keywords`, `meta_description`, `username`, `token`, `start_param`, `image`, `views`, `status`, `default_category_id`, `author_by`, `added_by`, `moderated_by`, `created_at`, `updated_at`) VALUES
-	(1, 'FrontVisionBot', 'Удобный бот для работы с клиентами компании ООО FrontVision.', 'FrontVisionBot', NULL, NULL, 'frontvision_bot', '502079464:AAGVyl3_NZPLCNQFaj--DY6zKa-SOZySaiA', NULL, 'frontvision.png', 0, 1, 5, NULL, 343142692, 343142692, 1538469948, 1538469948);
+	(1, 'FrontVisionBot', 'Удобный бот для работы с клиентами компании ООО FrontVision.', 'FrontVisionBot', NULL, NULL, 'frontvision_bot', '502079464:AAGVyl3_NZPLCNQFaj--DY6zKa-SOZySaiA', NULL, 'frontvision.png', 0, 1, 5, NULL, 343142692, 343142692, 1538469948, 1538469948),
+	(16, 'SuperBot', 'Ебланский бот, который меня уже блять  заебал!!! Но вроде работает...', 'SuperBot', NULL, NULL, 'super_bot', NULL, 'http://botshop.loc', 'bot_2743be6d0ebf6116e5109ac9da8d0ca8.jpg', 0, 1, 1, NULL, 343142692, NULL, 1539022056, 1539022056);
 /*!40000 ALTER TABLE `bot` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.bot_language
@@ -352,7 +353,9 @@ CREATE TABLE IF NOT EXISTS `bot_to_bot_language` (
 /*!40000 ALTER TABLE `bot_to_bot_language` DISABLE KEYS */;
 INSERT INTO `bot_to_bot_language` (`bot_id`, `bot_language_id`) VALUES
 	(1, 1),
-	(1, 3);
+	(1, 3),
+	(16, 1),
+	(16, 2);
 /*!40000 ALTER TABLE `bot_to_bot_language` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.bot_to_bot_tag
@@ -374,7 +377,10 @@ CREATE TABLE IF NOT EXISTS `bot_to_category` (
 -- Дамп данных таблицы yii_botshop_advanced.bot_to_category: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `bot_to_category` DISABLE KEYS */;
 INSERT INTO `bot_to_category` (`bot_id`, `category_id`) VALUES
-	(1, 5);
+	(1, 5),
+	(16, 1),
+	(16, 2),
+	(16, 3);
 /*!40000 ALTER TABLE `bot_to_category` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.bot_to_comment

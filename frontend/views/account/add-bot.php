@@ -27,7 +27,13 @@ $this->params['breadcrumbs'][] = Yii::t('frontend', 'Add bot');
         </div>
 
         <div class="col-md-8">
-            <?php $form = ActiveForm::begin(); ?>
+            <?php if(isset($error_warning)) { ?>
+            <div class="alert alert-danger alert-dismissible"><i class="fa fa-times-circle"></i> <?= $error_warning ?>
+                <button type="button" class="close" data-dismiss="alert">×</button>
+            </div>
+            <?php } ?>
+
+            <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
 
             <?= $form->field($model, 'meta_title')->textInput() ?>
 
@@ -43,11 +49,11 @@ $this->params['breadcrumbs'][] = Yii::t('frontend', 'Add bot');
 
             <?= $form->field($model, 'image')->fileInput() ?>
 
-            <?= $form->field($model, 'default_category_id')->dropDownList($categoryList, ['prompt' => '-- Выбор категории --', 'class' => 'turnintodropdown']) ?>
+            <?= $form->field($model, 'default_category_id')->dropDownList($categoryList, ['prompt' => '-- Выбор категории --']) ?>
 
-            <?= $form->field($model, 'category_ids')->dropDownList($categoryList, ['multiple' => true, 'class' => 'turnintodropdown']) ?>
+            <?= $form->field($model, 'category_ids')->dropDownList($categoryList, ['multiple' => true]) ?>
 
-            <?= $form->field($model, 'language_ids')->dropDownList($botLanguageList, ['multiple' => true, 'class' => 'turnintodropdown']) ?>
+            <?= $form->field($model, 'language_ids')->dropDownList($botLanguageList, ['multiple' => true]) ?>
 
             <?= $form->field($model, 'token')->textInput() ?>
 

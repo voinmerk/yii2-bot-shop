@@ -3,7 +3,10 @@ namespace frontend\models\forms;
 
 use Yii;
 use yii\base\Model;
-use yii\web\UploadedFile;
+// use yii\web\UploadedFile;
+use frontend\models\Bot;
+use frontend\models\BotLanguage;
+use frontend\models\Category;
 
 class AddBotForm extends Model
 {
@@ -11,10 +14,10 @@ class AddBotForm extends Model
     public $title;
     public $username;
     public $content;
+    public $image;
+    public $default_category_id;
     public $category_ids;
     public $language_ids;
-    public $default_category_id;
-    public $image;
     public $token;
 
     /**
@@ -31,7 +34,7 @@ class AddBotForm extends Model
             [['category_ids', 'language_ids'], 'safe'], // Тип - array
             ['username', 'unique', 'targetClass' => '\frontend\models\Bot', 'message' => 'This bot\'s name is already taken.'], // Уникальное значение
             ['token', 'unique', 'targetClass' => '\frontend\models\Bot', 'message' => 'This token is already being used by another bot.'], // Уникальное значение
-            [['image'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'], // Тип файл, разрешины только png и jpg
+            [['image'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 1], // Тип файл, разрешины только png и jpg
         ];
     }
 
@@ -43,13 +46,13 @@ class AddBotForm extends Model
         return [
             'meta_title' => Yii::t('frontend', 'Заголовок страницы бота'),
             'title' => Yii::t('frontend', 'Имя бота'),
-            'content' => Yii::t('frontend', 'Описание'),
             'username' => Yii::t('frontend', 'Логин бота'),
-            'token' => Yii::t('frontend', 'Токен'),
+            'content' => Yii::t('frontend', 'Описание'),
             'image' => Yii::t('frontend', 'Изображение (аватар)'),
             'default_category_id' => Yii::t('frontend', 'Категория по умолчанию'),
             'category_ids' => Yii::t('frontend', 'Категория бота'),
             'language_ids' => Yii::t('frontend', 'Языки бота'),
+            'token' => Yii::t('frontend', 'Токен'),
         ];
     }
 
@@ -77,23 +80,37 @@ class AddBotForm extends Model
      */
     public function addBot()
     {
-        if (!$this->validate()) {
+        /*if (!$this->validate()) {
             return false;
+        }*/
+
+        $model = new Bot;
+
+        if ($this->image) {
+            $model->meta_title = $this->meta_title;
+            $model->title = $this->title;
+            $model->username = $this->username;
+            $model->content = $this->content;
+            $model->default_category_id = $this->default_category_id;
+            $model->image = $this->image;
+            $model->token = $this->token ? $this->token : null;
+            $model->added_by = Yii::$app->user->identity->id;
+
+            if($model->save()) {
+                foreach ($this->category_ids as $category_id) {
+                    $model->link('categories', Category::findOne($category_id));
+                }
+
+                foreach ($this->language_ids as $language_id) {
+                    $model->link('botLanguages', BotLanguage::findOne($language_id));
+                }
+
+                return true;
+            }
+        } else {
+            die(var_dump($model->image));
         }
 
-        $model = new \frontend\models\Bot();
-
-        //$model->scenario($model::SCENARIO_CREATE);
-
-        $this->image->saveAs('uploads/bots/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
-
-        $model->username = $this->username;
-        $model->username = $this->username;
-        $model->username = $this->username;
-        $model->username = $this->username;
-        
-        $model->image = $this->image;
-
-        return $model->save();
+        return false;
     }
 }
