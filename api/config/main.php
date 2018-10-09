@@ -7,21 +7,50 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-botshop-api',
+    'id' => 'app-api',
     'basePath' => dirname(__DIR__),
-    //'sourceLanguage' => 'en',
-    //'bootstrap' => ['log'],
     'controllerNamespace' => 'api\controllers',
+    'bootstrap' => [
+        'log',
+        [
+            'class' => 'yii\filters\ContentNegotiator',
+            'formats' => [
+                'application/json' => 'json',
+                //'application/xml' => 'xml',
+            ],
+        ],
+    ],
     'modules' => [
         'v1' => [
             'basePath' => '@api/modules/v1',
-            'class' => 'api\modules\v1\Module',
+            'class' => 'api\modules\v1\ApiModule',
         ]
     ],
     'components' => [
+        'request' => [
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
+            'baseUrl' => '/api',
+        ],
+        'response' => [
+            'format' => yii\web\Response::FORMAT_JSON,
+            'formatters' => [
+                'json' => [
+                    'class' => 'yii\web\JsonResponseFormatter',
+                    'prettyPrint' => YII_DEBUG,
+                    'encodeOptions' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+                ],
+            ],
+        ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => false,
+            'enableSession' => false,
+            'loginUrl' => null,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -34,19 +63,33 @@ return [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing' => true,
+            // 'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'pluralize' => false,
+                    // 'pluralize' => false,
                     'controller' => 'v1/bot',
                     'tokens' => [
-                        '{id}' => '<id:\\w+>'
-                    ]
-                ]
+                        '{id}' => '<id:\\w+>',
+                    ],
+                ],
+                '' => 'site/index',
+                //'<controller>/<action>' => '<controller>/<action>',
             ],
         ],
     ],
+    /*'as access' => [
+        'class' => 'yii\filters\AccessControl',
+        // Исключение
+        'except' => ['site/index'],
+        // Для остального нужна авторизация
+        'rules' => [
+            [
+                'allow' => true,
+                'roles' => ['@'],
+            ],
+        ],
+    ],*/
     'params' => $params,
 ];
