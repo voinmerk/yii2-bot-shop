@@ -27,12 +27,4 @@ class SearchForm extends Model
             'q' => '',
         ];
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function search()
-    {
-
-    }
 }

@@ -3,30 +3,30 @@
 namespace frontend\models;
 
 use Yii;
-use common\models\User;
 
 /**
- * This is the model class for table "{{%comment}}".
+ * This is the model class for table "{{%post_comment}}".
  *
  * @property int $id
  * @property string $content
- * @property int $bot_id
+ * @property int $post_id
  * @property int $created_by
  * @property int $updated_by
  * @property int $created_at
  * @property int $updated_at
  *
+ * @property Post $post
  * @property User $createdBy
  * @property User $updatedBy
  */
-class Comment extends \yii\db\ActiveRecord
+class PostComment extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%comment}}';
+        return '{{%post_comment}}';
     }
 
     /**
@@ -35,24 +35,12 @@ class Comment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['content'], 'required'],
+            [['content', 'post_id', 'created_at', 'updated_at'], 'required'],
             [['content'], 'string'],
-            [['bot_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['bot_id'], 'exist', 'skipOnError' => true, 'targetClass' => Bot::className(), 'targetAttribute' => ['bot_id' => 'id']],
+            [['post_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Post::className(), 'targetAttribute' => ['post_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class' => \yii\behaviors\TimestampBehavior::className(),
-            ],
         ];
     }
 
@@ -64,6 +52,7 @@ class Comment extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('frontend', 'ID'),
             'content' => Yii::t('frontend', 'Content'),
+            'post_id' => Yii::t('frontend', 'Post ID'),
             'created_by' => Yii::t('frontend', 'Created By'),
             'updated_by' => Yii::t('frontend', 'Updated By'),
             'created_at' => Yii::t('frontend', 'Created At'),
@@ -74,9 +63,9 @@ class Comment extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBot()
+    public function getPost()
     {
-        return $this->hasOne(Bot::className(), ['id' => 'bot_id']);
+        return $this->hasOne(Post::className(), ['id' => 'post_id'])->inverseOf('postComments');
     }
 
     /**
@@ -84,15 +73,7 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function getCreatedBy()
     {
-        return $this->hasOne(User::className(), ['id' => 'created_by']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAuthor()
-    {
-        return $this->createdBy->username;
+        return $this->hasOne(User::className(), ['id' => 'created_by'])->inverseOf('postComments');
     }
 
     /**
@@ -100,6 +81,6 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function getUpdatedBy()
     {
-        return $this->hasOne(User::className(), ['id' => 'updated_by']);
+        return $this->hasOne(User::className(), ['id' => 'updated_by'])->inverseOf('postComments0');
     }
 }

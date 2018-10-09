@@ -8,8 +8,8 @@ use yii\web\Controller;
 
 use frontend\models\Bot;
 use frontend\models\BotRating;
-use frontend\models\Category;
-use frontend\models\Comment;
+use frontend\models\BotCategory;
+use frontend\models\BotComment;
 use frontend\models\BotLanguage;
 use frontend\models\Language;
 
@@ -35,7 +35,7 @@ class BotController extends Controller
     	$data = [];
 
         $data['language_id'] = Language::getLanguageIdByCode(Yii::$app->language);
-        $data['categories'] = Category::getList();
+        $data['categories'] = BotCategory::getList();
         $data['bots'] = Bot::findAll(['published' => Bot::PUBLISHED, 'status' => Bot::STATUS_APPROVED]);
 
         return $this->render('index', $data);
@@ -47,15 +47,15 @@ class BotController extends Controller
 
         $data['language_id'] = Language::getLanguageIdByCode(Yii::$app->language);
 
-        $modelCategory = Category::getCategoryById($category);
+        $modelCategory = BotCategory::getCategoryById($category);
 
         if(!$modelCategory) {
             throw new BadRequestHttpException(Yii::t('frontend', 'This category does not exist!'));
         }
 
         $data['category'] = $modelCategory;
-        $data['categories'] = Category::getList();
-        $data['bots'] = Category::find()->where(['slug' => $category])->with('bots')->one()->bots;
+        $data['categories'] = BotCategory::getList();
+        $data['bots'] = BotCategory::find()->where(['slug' => $category])->with('bots')->one()->bots;
 
     	return $this->render('category', $data);
     }
@@ -67,7 +67,7 @@ class BotController extends Controller
         $request = Yii::$app->request;
         $session = Yii::$app->session;
 
-        $modelCategory = Category::getCategoryById($category);
+        $modelCategory = BotCategory::getCategoryById($category);
         $modelBot = Bot::getBotById($bot);
 
         if(!$modelCategory) {
@@ -100,7 +100,7 @@ class BotController extends Controller
 
                         return $this->redirect(['bot/view', 'category' => $category, 'bot' => $bot, '#' => 'comments']);
                     } else {
-                        $session->setFlash('comment_error', Yii::t('frontend', 'Error send comment'));
+                        $session->setFlash('comment_error', Yii::t('frontend', 'Unprocessed error!'));
                     }
                 }
             } else {
@@ -123,7 +123,7 @@ class BotController extends Controller
 
         $data['search'] = $q;
         $data['language_id'] = Language::getLanguageIdByCode(Yii::$app->language);
-        $data['categories'] = Category::getList();
+        $data['categories'] = BotCategory::getList();
         $data['bots'] = Bot::getBotBySearchText($q);
 
         return $this->render('search', $data);

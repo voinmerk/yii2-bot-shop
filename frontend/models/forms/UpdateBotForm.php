@@ -3,10 +3,10 @@ namespace frontend\models\forms;
 
 use Yii;
 use yii\base\Model;
-// use yii\web\UploadedFile;
+
 use frontend\models\Bot;
 use frontend\models\BotLanguage;
-use frontend\models\Category;
+use frontend\models\BotCategory;
 
 class UpdateBotForm extends Model
 {
@@ -53,25 +53,6 @@ class UpdateBotForm extends Model
     /**
      * {@inheritdoc}
      */
-    public function validateUsername($attribute, $params) {
-        if ($this->username[0] == '@')
-            $this->username = substr($this->username, 1);
-
-        $pos = strripos($this->username, 'bot');
-
-        if (!$pos) {
-            $this->addError($attribute, 'Sorry, this username is invalid.');
-        } else {
-            $rest = substr($this->username, $pos);
-
-            if (strtolower($rest) != 'bot')
-                $this->addError($attribute, 'Sorry, this username is invalid.');
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function updateBot()
     {
         /*if (!$this->validate()) {
@@ -83,16 +64,13 @@ class UpdateBotForm extends Model
         if ($this->image) {
             $model->meta_title = $this->meta_title;
             $model->title = $this->title;
-            $model->username = $this->username;
             $model->content = $this->content;
             $model->default_category_id = $this->default_category_id;
             $model->image = $this->image;
-            $model->token = $this->token ? $this->token : null;
-            $model->added_by = Yii::$app->user->identity->id;
 
             if($model->save()) {
                 foreach ($this->category_ids as $category_id) {
-                    $model->link('categories', Category::findOne($category_id));
+                    $model->link('categories', BotCategory::findOne($category_id));
                 }
 
                 foreach ($this->language_ids as $language_id) {

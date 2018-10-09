@@ -3,8 +3,8 @@ namespace frontend\models\forms;
 
 use Yii;
 use yii\base\Model;
-// use yii\web\UploadedFile;
-use frontend\models\Comment;
+
+use frontend\models\BotComment;
 
 class CommentForm extends Model
 {
@@ -43,7 +43,7 @@ class CommentForm extends Model
             return false;
         }
 
-        $model = new Comment;
+        $model = new BotComment;
 
         $model->content = $this->comment;
         $model->bot_id = $this->bot_id;

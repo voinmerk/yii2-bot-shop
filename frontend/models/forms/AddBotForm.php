@@ -3,10 +3,10 @@ namespace frontend\models\forms;
 
 use Yii;
 use yii\base\Model;
-// use yii\web\UploadedFile;
+
 use frontend\models\Bot;
 use frontend\models\BotLanguage;
-use frontend\models\Category;
+use frontend\models\BotCategory;
 
 class AddBotForm extends Model
 {
@@ -98,7 +98,7 @@ class AddBotForm extends Model
 
             if($model->save()) {
                 foreach ($this->category_ids as $category_id) {
-                    $model->link('categories', Category::findOne($category_id));
+                    $model->link('categories', BotCategory::findOne($category_id));
                 }
 
                 foreach ($this->language_ids as $language_id) {

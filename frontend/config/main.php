@@ -73,6 +73,9 @@ return [
                 'frontend*' => [
                     'class' => 'yii\i18n\DbMessageSource',
                     'sourceLanguage' => \Yii::$app->language,
+
+                    'sourceMessageTable' => '{{%language_message}}',
+                    'messageTable' => '{{%language_message_translate}}',
                 ],
             ],
         ],

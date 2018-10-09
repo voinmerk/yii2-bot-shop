@@ -3,9 +3,6 @@
 namespace frontend\models;
 
 use Yii;
-use yii\data\ActiveDataProvider;
-
-use common\models\User;
 
 /**
  * This is the model class for table "{{%bot}}".
@@ -13,18 +10,29 @@ use common\models\User;
  * @property int $id
  * @property string $title
  * @property string $content
- * @property string username
- * @property string token
+ * @property string $meta_title
+ * @property string $meta_keywords
+ * @property string $meta_description
+ * @property string $username
+ * @property string $token
+ * @property string $start_param
  * @property string $image
  * @property int $views
- * @property int $author_by ~ Автор бота
- * @property int $added_by ~ Пользователь который добавил бота
- * @property int $moderated_by ~ Админ который модерировал бота
+ * @property int $status
+ * @property int $published
+ * @property int $default_category_id
+ * @property int $author_by
+ * @property int $added_by
+ * @property int $moderated_by
  * @property int $created_at
  * @property int $updated_at
  *
- * @property User $updatedBy
- * @property User $createdBy
+ * @property BotCategory $defaultCategory
+ * @property User $addedBy
+ * @property User $authorBy
+ * @property User $moderatedBy
+ * @property BotComment[] $botComments
+ * @property BotRating[] $botRatings
  */
 class Bot extends \yii\db\ActiveRecord
 {
@@ -37,9 +45,6 @@ class Bot extends \yii\db\ActiveRecord
     const PUBLISHED = 1;
 
     const START_PARAM = 'http://botshop.loc';
-
-    public $category_ids = [];
-    public $language_ids = [];
 
     /**
      * {@inheritdoc}
@@ -57,17 +62,18 @@ class Bot extends \yii\db\ActiveRecord
         return [
             [['title', 'content', 'meta_title', 'username', 'image'], 'required'],
             [['content', 'meta_keywords', 'meta_description'], 'string'],
-            [['title', 'meta_title', 'username', 'token', 'image', 'start_param'], 'string', 'max' => 255],
-            [['views', 'status', 'published', 'author_by', 'added_by', 'moderated_by', 'created_at', 'updated_at', 'default_category_id'], 'integer'],
+            [['views', 'status', 'published', 'default_category_id', 'author_by', 'added_by', 'moderated_by', 'created_at', 'updated_at'], 'integer'],
+            [['title', 'meta_title', 'username', 'token', 'start_param', 'image'], 'string', 'max' => 255],
+            [['username'], 'unique'],
+            [['token'], 'unique'],
             ['start_param', 'default', 'value' => self::START_PARAM],
-            [['username', 'token'], 'unique'],
             ['status', 'default', 'value' => self::STATUS_PANDING_APPROVED],
             ['status', 'in', 'range' => [self::STATUS_PANDING_APPROVED, self::STATUS_REJECTED, self::STATUS_APPROVED, self::STATUS_BANNED]],
             ['published', 'default', 'value' => self::PUBLISHED],
             ['published', 'in', 'range' => [self::PUBLISHED, self::UNPUBLISHED]],
-            [['default_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['default_category_id' => 'id']],
-            [['author_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_by' => 'id']],
+            [['default_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => BotCategory::className(), 'targetAttribute' => ['default_category_id' => 'id']],
             [['added_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['added_by' => 'id']],
+            [['author_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_by' => 'id']],
             [['moderated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['moderated_by' => 'id']],
         ];
     }
@@ -91,26 +97,24 @@ class Bot extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('frontend', 'ID'),
-            'title' => Yii::t('frontend', 'Имя бота'),
-            'content' => Yii::t('frontend', 'Описание'),
-            'meta_title' => Yii::t('frontend', 'Заголовок страницы бота'),
+            'title' => Yii::t('frontend', 'Title'),
+            'content' => Yii::t('frontend', 'Content'),
+            'meta_title' => Yii::t('frontend', 'Meta Title'),
             'meta_keywords' => Yii::t('frontend', 'Meta Keywords'),
             'meta_description' => Yii::t('frontend', 'Meta Description'),
-            'username' => Yii::t('frontend', 'Логин бота'),
-            'token' => Yii::t('frontend', 'Токен'),
-            'image' => Yii::t('frontend', 'Изображение (аватар)'),
+            'username' => Yii::t('frontend', 'Username'),
+            'token' => Yii::t('frontend', 'Token'),
+            'start_param' => Yii::t('frontend', 'Start Param'),
+            'image' => Yii::t('frontend', 'Image'),
             'views' => Yii::t('frontend', 'Views'),
-            'default_category_id' => Yii::t('frontend', 'Категория по умолчанию'),
+            'status' => Yii::t('frontend', 'Status'),
+            'published' => Yii::t('frontend', 'Published'),
+            'default_category_id' => Yii::t('frontend', 'Default Category ID'),
             'author_by' => Yii::t('frontend', 'Author By'),
             'added_by' => Yii::t('frontend', 'Added By'),
             'moderated_by' => Yii::t('frontend', 'Moderated By'),
             'created_at' => Yii::t('frontend', 'Created At'),
             'updated_at' => Yii::t('frontend', 'Updated At'),
-            'status' => Yii::t('frontend', 'Status'),
-            'published' => Yii::t('frontend', 'Published'),
-
-            'category_ids' => Yii::t('frontend', 'Категория бота'),
-            'language_ids' => Yii::t('frontend', 'Языки бота'),
         ];
     }
 
@@ -119,7 +123,7 @@ class Bot extends \yii\db\ActiveRecord
      */
     public static function getBotById($id)
     {
-        $query = self::find()->with(['comments', 'botLanguages', 'botsRating'])->where(['username' => $id, 'status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
+        $query = self::find()->with(['botComments', 'botLanguages', 'botRating'])->where(['username' => $id, 'status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
 
         return $query->one();
     }
@@ -129,7 +133,7 @@ class Bot extends \yii\db\ActiveRecord
      */
     public static function getListAll()
     {
-        $query = self::find()->with(['botsRating'])->where(['status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
+        $query = self::find()->with(['botRating'])->where(['status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
 
         return $query->all();
     }
@@ -140,7 +144,7 @@ class Bot extends \yii\db\ActiveRecord
     public static function getBotBySearchText($q)
     {
         return self::find()
-                    ->with(['botsRating'])
+                    ->with(['botRating'])
                     ->where(['status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED])
                     ->andWhere(['or', ['like', 'meta_title', $q], ['like', 'title', $q], ['like', 'content', $q]])
                     ->all();
@@ -149,41 +153,9 @@ class Bot extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getAuthorBy()
+    public function getBotCategories()
     {
-        return $this->hasOne(User::className(), ['id' => 'author_by']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAddedBy()
-    {
-        return $this->hasOne(User::className(), ['id' => 'added_by']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getModeratedBy()
-    {
-        return $this->hasOne(User::className(), ['id' => 'moderated_by']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCategories()
-    {
-        return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable('bot_to_category', ['bot_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getComments()
-    {
-        return $this->hasMany(Comment::className(), ['bot_id' => 'id'])->orderBy(['created_at' => SORT_DESC]);
+        return $this->hasMany(BotCategory::className(), ['id' => 'category_id'])->viaTable('bot_to_bot_category', ['bot_id' => 'id']);
     }
 
     /**
@@ -207,46 +179,46 @@ class Bot extends \yii\db\ActiveRecord
      */
     public function getDefCategory()
     {
-        return $this->hasOne(Category::className(), ['id' => 'default_category_id']);
+        return $this->hasOne(BotCategory::className(), ['id' => 'default_category_id'])->inverseOf('botsByDefCategory');
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBotsRating()
+    public function getAddedBy()
     {
-        return $this->hasMany(BotRating::className(), ['bot_id' => 'id']);
+        return $this->hasOne(User::className(), ['id' => 'added_by'])->inverseOf('bots');
     }
 
-    public function getStatusList()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthorBy()
     {
-        return [
-            Yii::t('frontend', 'Rejected'),
-            Yii::t('frontend', 'Approved'),
-            Yii::t('frontend', 'Panding approved'),
-            Yii::t('frontend', 'Banned'),
-        ];
+        return $this->hasOne(User::className(), ['id' => 'author_by'])->inverseOf('bots0');
     }
 
-    public function getStatusName()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getModeratedBy()
     {
-        $statusList = $this->getStatusList();
-
-        return $statusList[$this->status];
+        return $this->hasOne(User::className(), ['id' => 'moderated_by'])->inverseOf('bots1');
     }
 
-    public function getPublishedList()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBotComments()
     {
-        return [
-            Yii::t('frontend', 'Unpublished'),
-            Yii::t('frontend', 'Published'),
-        ];
+        return $this->hasMany(BotComment::className(), ['bot_id' => 'id'])->inverseOf('bot');
     }
 
-    public function getPublishedName()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBotRatings()
     {
-        $publishedList = $this->getPublishedList();
-
-        return $publishedList[$this->published];
+        return $this->hasMany(BotRating::className(), ['bot_id' => 'id'])->inverseOf('bot');
     }
 }

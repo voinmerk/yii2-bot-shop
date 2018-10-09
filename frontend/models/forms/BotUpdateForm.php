@@ -3,9 +3,12 @@ namespace frontend\models\forms;
 
 use Yii;
 use yii\base\Model;
-use yii\web\UploadedFile;
 
-class AddBotForm extends Model
+use frontend\models\Bot;
+use frontend\models\BotLanguage;
+use frontend\models\BotCategory;
+
+class BotUpdateForm extends Model
 {
     public $meta_title;
     public $title;

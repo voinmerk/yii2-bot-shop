@@ -10,7 +10,7 @@ use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 
 use frontend\models\Bot;
-use frontend\models\Category;
+use frontend\models\BotCategory;
 use frontend\models\BotLanguage;
 use frontend\models\forms\AddBotForm;
 
@@ -76,7 +76,7 @@ class AccountController extends Controller
             }
         }
 
-        $categories = Category::find()->select(['id', 'slug'])->where(['status' => Category::STATUS_ACTIVE])->all();
+        $categories = BotCategory::find()->select(['id', 'slug'])->where(['status' => BotCategory::STATUS_ACTIVE])->all();
         $languages = BotLanguage::find()->all();
 
         $data['model'] = $model;

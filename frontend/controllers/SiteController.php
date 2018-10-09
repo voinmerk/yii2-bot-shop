@@ -5,9 +5,7 @@ use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use frontend\models\forms\ContactForm;
 use yii\filters\VerbFilter;
-use frontend\models\Language;
 
 
 /**
@@ -20,14 +18,7 @@ class SiteController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'language' => ['post'],
-                ],
-            ],
-        ];
+        return [];
     }
 
     /**
@@ -88,5 +79,5 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-    
+
 }

@@ -5,19 +5,19 @@ namespace frontend\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%bot_tag}}".
+ * This is the model class for table "{{%post_tag}}".
  *
  * @property int $id
  * @property string $content
  */
-class BotTag extends \yii\db\ActiveRecord
+class PostTag extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%bot_tag}}';
+        return '{{%post_tag}}';
     }
 
     /**
@@ -27,7 +27,7 @@ class BotTag extends \yii\db\ActiveRecord
     {
         return [
             [['content'], 'required'],
-            [['content'], 'string', 'max' => 255],
+            [['content'], 'string'],
         ];
     }
 

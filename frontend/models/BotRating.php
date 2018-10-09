@@ -56,7 +56,7 @@ class BotRating extends \yii\db\ActiveRecord
      */
     public function getBot()
     {
-        return $this->hasOne(Bot::className(), ['id' => 'bot_id']);
+        return $this->hasOne(Bot::className(), ['id' => 'bot_id'])->inverseOf('botRatings');
     }
 
     /**
@@ -64,6 +64,6 @@ class BotRating extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id'])->inverseOf('botRatings');
     }
 }

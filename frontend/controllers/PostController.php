@@ -6,7 +6,7 @@ use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
-class BlogController extends Controller
+class PostController extends Controller
 {
     public function actionPost()
     {

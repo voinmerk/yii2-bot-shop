@@ -1,10 +1,11 @@
 <?php
+
 namespace frontend\models;
 
 use Yii;
 
 /**
- * This is the model class for table "{{%category_translate}}".
+ * This is the model class for table "{{%bot_category_translate}}".
  *
  * @property int $category_id
  * @property int $language_id
@@ -14,17 +15,17 @@ use Yii;
  * @property string $meta_keywords
  * @property string $meta_description
  *
- * @property Category $category
+ * @property BotCategory $category
  * @property Language $language
  */
-class CategoryTranslate extends \yii\db\ActiveRecord
+class BotCategoryTranslate extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%category_translate}}';
+        return '{{%bot_category_translate}}';
     }
 
     /**
@@ -37,7 +38,7 @@ class CategoryTranslate extends \yii\db\ActiveRecord
             [['category_id', 'language_id'], 'integer'],
             [['content', 'meta_keywords', 'meta_description'], 'string'],
             [['title', 'meta_title'], 'string', 'max' => 255],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
+            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => BotCategory::className(), 'targetAttribute' => ['category_id' => 'id']],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Language::className(), 'targetAttribute' => ['language_id' => 'id']],
         ];
     }
@@ -63,7 +64,7 @@ class CategoryTranslate extends \yii\db\ActiveRecord
      */
     public function getCategory()
     {
-        return $this->hasOne(Category::className(), ['id' => 'category_id']);
+        return $this->hasOne(BotCategory::className(), ['id' => 'category_id'])->inverseOf('botCategoryTranslates');
     }
 
     /**
@@ -71,6 +72,6 @@ class CategoryTranslate extends \yii\db\ActiveRecord
      */
     public function getLanguage()
     {
-        return $this->hasOne(Language::className(), ['id' => 'language_id']);
+        return $this->hasOne(Language::className(), ['id' => 'language_id'])->inverseOf('botCategoryTranslates');
     }
 }
