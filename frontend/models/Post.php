@@ -8,14 +8,9 @@ use Yii;
  * This is the model class for table "{{%post}}".
  *
  * @property int $id
- * @property string $title
- * @property string $preview_content
- * @property string $content
  * @property string $image
  * @property string $slug
- * @property string $meta_title
- * @property string $meta_keywords
- * @property string $meta_description
+ * @property int $status
  * @property int $created_by
  * @property int $updated_by
  * @property int $created_at
@@ -28,6 +23,16 @@ use Yii;
  */
 class Post extends \yii\db\ActiveRecord
 {
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+
+    public $title;
+    public $preview_content;
+    public $content;
+    public $meta_title;
+    public $meta_keywords;
+    public $meta_description;
+
     /**
      * {@inheritdoc}
      */
@@ -42,11 +47,12 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'preview_content', 'content', 'slug', 'meta_title', 'meta_keywords', 'meta_description', 'created_at', 'updated_at'], 'required'],
-            [['preview_content', 'content', 'meta_keywords', 'meta_description'], 'string'],
-            [['created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'image', 'slug', 'meta_title'], 'string', 'max' => 255],
+            [['slug', 'created_at', 'updated_at'], 'required'],
+            [['status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['image', 'slug'], 'string', 'max' => 255],
             [['slug'], 'unique'],
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
@@ -59,14 +65,9 @@ class Post extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('frontend', 'ID'),
-            'title' => Yii::t('frontend', 'Title'),
-            'preview_content' => Yii::t('frontend', 'Preview Content'),
-            'content' => Yii::t('frontend', 'Content'),
             'image' => Yii::t('frontend', 'Image'),
             'slug' => Yii::t('frontend', 'Slug'),
-            'meta_title' => Yii::t('frontend', 'Meta Title'),
-            'meta_keywords' => Yii::t('frontend', 'Meta Keywords'),
-            'meta_description' => Yii::t('frontend', 'Meta Description'),
+            'status' => Yii::t('frontend', 'Status'),
             'created_by' => Yii::t('frontend', 'Created By'),
             'updated_by' => Yii::t('frontend', 'Updated By'),
             'created_at' => Yii::t('frontend', 'Created At'),
@@ -101,8 +102,8 @@ class Post extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPostTrasnlates()
+    public function getPostTranslates()
     {
-        return $this->hasMany(PostTrasnlate::className(), ['post_id' => 'id'])->inverseOf('post');
+        return $this->hasMany(PostTranslate::className(), ['post_id' => 'id'])->inverseOf('post');
     }
 }

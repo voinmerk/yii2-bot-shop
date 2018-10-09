@@ -11,7 +11,7 @@ use common\widgets\Alert;
         //'homeLink' => ['label' => Yii::t('frontend', 'Bots Catalog')],
     ]) ?>
 
-    <?= Alert::widget() ?>
-    
+    <?php //echo Alert::widget() ?>
+
     <?= $content ?>
 </div>

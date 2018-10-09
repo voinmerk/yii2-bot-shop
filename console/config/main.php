@@ -6,6 +6,20 @@ $params = array_merge(
     require __DIR__ . '/params-local.php'
 );
 
+$frontend = require(__DIR__ . '/../../frontend/config/main.php');
+$comsole = [
+    'components' => [
+        'urlManager' => [
+            'class' => 'common\components\UrlManager',
+            'enableDefaultLanguageUrlCode' => true,
+            
+            'baseUrl' => $params['frontendHostName'],
+        ]
+    ]
+];
+
+$urlManager = \yii\helpers\ArrayHelper::merge($frontend['components']['urlManager'], $comsole['components']['urlManager']);
+
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
@@ -19,7 +33,14 @@ return [
         'fixture' => [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
-          ],
+        ],
+        'sitemap' => [
+            'class' => 'demi\sitemap\SitemapController',
+            'modelsPath' => '@console/models/sitemap',
+            'modelsNamespace' => 'console\models\sitemap',
+            'savePathAlias' => '@frontend/web',
+            'sitemapFileName' => 'sitemap.xml',
+        ],
     ],
     'components' => [
         'log' => [
@@ -30,6 +51,7 @@ return [
                 ],
             ],
         ],
+        'urlManager' => $urlManager,
     ],
     'params' => $params,
 ];

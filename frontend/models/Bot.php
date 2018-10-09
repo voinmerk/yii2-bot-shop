@@ -221,4 +221,36 @@ class Bot extends \yii\db\ActiveRecord
     {
         return $this->hasMany(BotRating::className(), ['bot_id' => 'id'])->inverseOf('bot');
     }
+
+    public function getStatusList()
+    {
+        return [
+            Yii::t('frontend', 'Rejected'),
+            Yii::t('frontend', 'Approved'),
+            Yii::t('frontend', 'Panding approved'),
+            Yii::t('frontend', 'Banned'),
+        ];
+    }
+
+    public function getStatusName()
+    {
+        $statusList = $this->getStatusList();
+
+        return $statusList[$this->status];
+    }
+
+    public function getPublishedList()
+    {
+        return [
+            Yii::t('frontend', 'Unpublished'),
+            Yii::t('frontend', 'Published'),
+        ];
+    }
+
+    public function getPublishedName()
+    {
+        $publishedList = $this->getPublishedList();
+
+        return $publishedList[$this->published];
+    }
 }

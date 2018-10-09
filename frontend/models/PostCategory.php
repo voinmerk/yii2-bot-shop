@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "{{%post_category}}".
  *
  * @property int $id
- * @property int $parent_id
+ * @property string $slug
  * @property string $image
  * @property int $template
  * @property int $created_by
@@ -36,9 +36,10 @@ class PostCategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['parent_id', 'template', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['created_at', 'updated_at'], 'required'],
-            [['image'], 'string', 'max' => 255],
+            [['slug', 'created_at', 'updated_at'], 'required'],
+            [['template', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['slug', 'image'], 'string', 'max' => 255],
+            [['slug'], 'unique'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
@@ -51,7 +52,7 @@ class PostCategory extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('frontend', 'ID'),
-            'parent_id' => Yii::t('frontend', 'Parent ID'),
+            'slug' => Yii::t('frontend', 'Slug'),
             'image' => Yii::t('frontend', 'Image'),
             'template' => Yii::t('frontend', 'Template'),
             'created_by' => Yii::t('frontend', 'Created By'),

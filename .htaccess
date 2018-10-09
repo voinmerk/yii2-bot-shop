@@ -5,7 +5,7 @@
 
 <IfModule mod_rewrite.c>
     RewriteCond %{REQUEST_URI} ^/(api)
-    RewriteRule ^.*$ api/web/index.php [L]
+    RewriteRule ^(.*)$ api/web/$1 [L]
 
     RewriteCond %{REQUEST_URI} ^/(admin)
     RewriteRule ^admin/assets/(.*)$ backend/web/assets/$1 [L]
@@ -13,7 +13,7 @@
     RewriteRule ^admin/js/(.*)$ backend/web/js/$1 [L]
     RewriteCond %{REQUEST_URI} !^/backend/web/(assets|js|css)/
     RewriteCond %{REQUEST_URI} ^/(admin)
-    RewriteRule ^.*$ backend/web/index.php [L]
+    RewriteRule ^(.*)$ backend/web/$1 [L]
 
     RewriteCond %{REQUEST_URI} ^/(assets|css|js|images)
     RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]

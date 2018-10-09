@@ -10,22 +10,23 @@ use Yii;
  * @property int $post_id
  * @property int $language_id
  * @property string $title
+ * @property string $preview_content
  * @property string $content
  * @property string $meta_title
  * @property string $meta_keywords
  * @property string $meta_description
  *
- * @property Post $post
  * @property Language $language
+ * @property Post $post
  */
-class PostTrasnlate extends \yii\db\ActiveRecord
+class PostTranslate extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%post_trasnlate}}';
+        return '{{%post_translate}}';
     }
 
     /**
@@ -34,12 +35,12 @@ class PostTrasnlate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['post_id', 'language_id', 'title', 'content', 'meta_title'], 'required'],
+            [['post_id', 'language_id', 'title', 'preview_content', 'content', 'meta_title'], 'required'],
             [['post_id', 'language_id'], 'integer'],
-            [['content', 'meta_keywords', 'meta_description'], 'string'],
+            [['preview_content', 'content', 'meta_keywords', 'meta_description'], 'string'],
             [['title', 'meta_title'], 'string', 'max' => 255],
-            [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Post::className(), 'targetAttribute' => ['post_id' => 'id']],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Language::className(), 'targetAttribute' => ['language_id' => 'id']],
+            [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Post::className(), 'targetAttribute' => ['post_id' => 'id']],
         ];
     }
 
@@ -52,6 +53,7 @@ class PostTrasnlate extends \yii\db\ActiveRecord
             'post_id' => Yii::t('frontend', 'Post ID'),
             'language_id' => Yii::t('frontend', 'Language ID'),
             'title' => Yii::t('frontend', 'Title'),
+            'preview_content' => Yii::t('frontend', 'Preview Content'),
             'content' => Yii::t('frontend', 'Content'),
             'meta_title' => Yii::t('frontend', 'Meta Title'),
             'meta_keywords' => Yii::t('frontend', 'Meta Keywords'),
@@ -62,16 +64,16 @@ class PostTrasnlate extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPost()
+    public function getLanguage()
     {
-        return $this->hasOne(Post::className(), ['id' => 'post_id'])->inverseOf('postTrasnlates');
+        return $this->hasOne(Language::className(), ['id' => 'language_id'])->inverseOf('postTranslates');
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLanguage()
+    public function getPost()
     {
-        return $this->hasOne(Language::className(), ['id' => 'language_id'])->inverseOf('postTrasnlates');
+        return $this->hasOne(Post::className(), ['id' => 'post_id'])->inverseOf('postTranslates');
     }
 }

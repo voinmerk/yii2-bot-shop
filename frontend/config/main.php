@@ -51,8 +51,11 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // site/index
+                'home' => 'site/index',
+
                 // Language module
-                'languages/<lang:w+>' => 'languages/default/index',
+                'languages/<lang:[\w_-]+>' => 'languages/default/index',
                 'languages' => 'languages/default/index',
 
                 // Catalog - bot controller
@@ -61,6 +64,12 @@ return [
                 'catalog/<category:[\w_-]+>' => 'bot/category',
                 'catalog' => 'bot/index',
                 '' => 'bot/index',
+
+                // Post controller
+                'post/search' => 'post/search',
+                'post/<category:[\w_-]+>/<post:[\w_-]+>' => 'post/view',
+                'post/<category:[\w_-]+>' => 'post/category',
+                'post' => 'post/index',
 
                 // Account controller
                 'account/bot-update/<bot:[\w_-]+>' => 'account/bot-update',
