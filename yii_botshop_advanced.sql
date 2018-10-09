@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         127.0.0.1
--- Версия сервера:               5.7.20 - MySQL Community Server (GPL)
+-- Версия сервера:               5.7.16 - MySQL Community Server (GPL)
 -- Операционная система:         Win64
 -- HeidiSQL Версия:              9.5.0.5196
 -- --------------------------------------------------------
@@ -116,11 +116,11 @@ CREATE TABLE IF NOT EXISTS `bot` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`username`),
   UNIQUE KEY `token` (`token`),
-  KEY `FK_bot_category` (`default_category_id`),
   KEY `FK_bot_user_author` (`author_by`),
   KEY `FK_bot_user_added` (`added_by`),
   KEY `FK_bot_user_moderated` (`moderated_by`),
-  CONSTRAINT `FK_bot_category` FOREIGN KEY (`default_category_id`) REFERENCES `bot_category` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  KEY `FK_bot_bot_category` (`default_category_id`),
+  CONSTRAINT `FK_bot_bot_category` FOREIGN KEY (`default_category_id`) REFERENCES `bot_category` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_bot_user_added` FOREIGN KEY (`added_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_bot_user_author` FOREIGN KEY (`author_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_bot_user_moderated` FOREIGN KEY (`moderated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -146,10 +146,10 @@ CREATE TABLE IF NOT EXISTS `bot_category` (
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`),
-  KEY `FK_category_user_created` (`created_by`),
-  KEY `FK_category_user_updated` (`updated_by`),
-  CONSTRAINT `FK_category_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `FK_category_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `FK_bot_category_user_created` (`created_by`),
+  KEY `FK_bot_category_user_updated` (`updated_by`),
+  CONSTRAINT `FK_bot_category_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_bot_category_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- Дамп данных таблицы yii_botshop_advanced.bot_category: ~7 rows (приблизительно)
@@ -173,10 +173,10 @@ CREATE TABLE IF NOT EXISTS `bot_category_translate` (
   `meta_title` varchar(255) NOT NULL,
   `meta_keywords` text,
   `meta_description` text,
-  KEY `FK_category_translate_category` (`category_id`),
-  KEY `FK_category_translate_language` (`language_id`),
-  CONSTRAINT `FK_category_translate_category` FOREIGN KEY (`category_id`) REFERENCES `bot_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_category_translate_language` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `FK_bot_category_translate_bot_category` (`category_id`),
+  KEY `FK_bot_category_translate_language` (`language_id`),
+  CONSTRAINT `FK_bot_category_translate_bot_category` FOREIGN KEY (`category_id`) REFERENCES `bot_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_bot_category_translate_language` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Дамп данных таблицы yii_botshop_advanced.bot_category_translate: ~14 rows (приблизительно)
@@ -208,12 +208,12 @@ CREATE TABLE IF NOT EXISTS `bot_comment` (
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_comment_user_created` (`created_by`),
-  KEY `FK_comment_user_updated` (`updated_by`),
-  KEY `FK_comment_bot` (`bot_id`),
-  CONSTRAINT `FK_comment_bot` FOREIGN KEY (`bot_id`) REFERENCES `bot` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_comment_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `FK_comment_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `FK_bot_comment_user_created` (`created_by`),
+  KEY `FK_bot_comment_user_updated` (`updated_by`),
+  KEY `FK_bot_comment_bot` (`bot_id`),
+  CONSTRAINT `FK_bot_comment_bot` FOREIGN KEY (`bot_id`) REFERENCES `bot` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_bot_comment_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_bot_comment_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- Дамп данных таблицы yii_botshop_advanced.bot_comment: ~5 rows (приблизительно)
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `bot_rating` (
   CONSTRAINT `FK_bot_rating_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.bot_rating: ~1 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.bot_rating: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `bot_rating` DISABLE KEYS */;
 INSERT INTO `bot_rating` (`id`, `bot_id`, `user_id`, `rating`) VALUES
 	(1, 1, 343142692, 5);
@@ -389,7 +389,7 @@ CREATE TABLE IF NOT EXISTS `language_message_translate` (
   `translation` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`,`language`),
   KEY `idx_message_language` (`language`),
-  CONSTRAINT `fk_message_source_message` FOREIGN KEY (`id`) REFERENCES `language_message` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_language_message_translate_language_message` FOREIGN KEY (`id`) REFERENCES `language_message` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Дамп данных таблицы yii_botshop_advanced.language_message_translate: ~72 rows (приблизительно)
@@ -503,10 +503,10 @@ CREATE TABLE IF NOT EXISTS `post` (
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`),
-  KEY `FK_blog_post_user_created` (`created_by`),
-  KEY `FK_blog_post_user_updated` (`updated_by`),
-  CONSTRAINT `FK_blog_post_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `FK_blog_post_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `FK_post_user_created` (`created_by`),
+  KEY `FK_post_user_updated` (`updated_by`),
+  CONSTRAINT `FK_post_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_post_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Дамп данных таблицы yii_botshop_advanced.post: ~0 rows (приблизительно)
@@ -524,13 +524,13 @@ CREATE TABLE IF NOT EXISTS `post_category` (
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_blog_category_user_created` (`created_by`),
-  KEY `FK_blog_category_user_updated` (`updated_by`),
-  CONSTRAINT `FK_blog_category_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `FK_blog_category_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `FK_post_category_user_created` (`created_by`),
+  KEY `FK_post_category_user_updated` (`updated_by`),
+  CONSTRAINT `FK_post_category_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_post_category_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.post_category: ~1 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.post_category: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `post_category` DISABLE KEYS */;
 INSERT INTO `post_category` (`id`, `parent_id`, `image`, `template`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
 	(1, 0, NULL, 0, 343142692, 343142692, 0, 0);
@@ -545,10 +545,10 @@ CREATE TABLE IF NOT EXISTS `post_category_translate` (
   `meta_title` varchar(255) NOT NULL,
   `meta_keywords` text,
   `meta_description` text,
-  KEY `FK_blog_category_translate_blog_category` (`category_id`),
-  KEY `FK_blog_category_translate_language` (`language_id`),
-  CONSTRAINT `FK_blog_category_translate_blog_category` FOREIGN KEY (`category_id`) REFERENCES `post_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_blog_category_translate_language` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `FK_post_category_translate_post_category` (`category_id`),
+  KEY `FK_post_category_translate_language` (`language_id`),
+  CONSTRAINT `FK_post_category_translate_language` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_post_category_translate_post_category` FOREIGN KEY (`category_id`) REFERENCES `post_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Дамп данных таблицы yii_botshop_advanced.post_category_translate: ~2 rows (приблизительно)
@@ -568,12 +568,12 @@ CREATE TABLE IF NOT EXISTS `post_comment` (
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_blog_comment_user_created` (`created_by`),
-  KEY `FK_blog_comment_user_updated` (`updated_by`),
-  KEY `FK_blog_comment_blog_post` (`post_id`),
-  CONSTRAINT `FK_blog_comment_blog_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_blog_comment_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `FK_blog_comment_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `FK_post_comment_user_created` (`created_by`),
+  KEY `FK_post_comment_user_updated` (`updated_by`),
+  KEY `FK_post_comment_post` (`post_id`),
+  CONSTRAINT `FK_post_comment_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_post_comment_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_post_comment_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Дамп данных таблицы yii_botshop_advanced.post_comment: ~0 rows (приблизительно)
@@ -620,10 +620,10 @@ CREATE TABLE IF NOT EXISTS `post_trasnlate` (
   `meta_title` varchar(255) NOT NULL,
   `meta_keywords` text,
   `meta_description` text,
-  KEY `FK_blog_post_trasnlate_blog_post` (`post_id`),
-  KEY `FK_blog_post_trasnlate_language` (`language_id`),
-  CONSTRAINT `FK_blog_post_trasnlate_blog_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_blog_post_trasnlate_language` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `FK_post_trasnlate_post` (`post_id`),
+  KEY `FK_post_trasnlate_language` (`language_id`),
+  CONSTRAINT `FK_post_trasnlate_language` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_post_trasnlate_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Дамп данных таблицы yii_botshop_advanced.post_trasnlate: ~0 rows (приблизительно)
