@@ -10,6 +10,7 @@ use common\models\User;
  *
  * @property int $id
  * @property string $content
+ * @property int $bot_id
  * @property int $created_by
  * @property int $updated_by
  * @property int $created_at
@@ -34,11 +35,24 @@ class Comment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['content', 'created_at', 'updated_at'], 'required'],
+            [['content'], 'required'],
             [['content'], 'string'],
-            [['created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['bot_id', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['bot_id'], 'exist', 'skipOnError' => true, 'targetClass' => Bot::className(), 'targetAttribute' => ['bot_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => \yii\behaviors\TimestampBehavior::className(),
+            ],
         ];
     }
 
@@ -55,6 +69,14 @@ class Comment extends \yii\db\ActiveRecord
             'created_at' => Yii::t('frontend', 'Created At'),
             'updated_at' => Yii::t('frontend', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBot()
+    {
+        return $this->hasOne(Bot::className(), ['id' => 'bot_id']);
     }
 
     /**

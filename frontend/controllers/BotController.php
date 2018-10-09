@@ -13,6 +13,8 @@ use frontend\models\Comment;
 use frontend\models\BotLanguage;
 use frontend\models\Language;
 
+use \frontend\models\forms\CommentForm;
+
 class BotController extends Controller
 {
     public function beforeAction($action)
@@ -34,7 +36,7 @@ class BotController extends Controller
 
         $data['language_id'] = Language::getLanguageIdByCode(Yii::$app->language);
         $data['categories'] = Category::getList();
-        $data['bots'] = Bot::findAll(['status' => Bot::STATUS_ACTIVE]);
+        $data['bots'] = Bot::findAll(['published' => Bot::PUBLISHED, 'status' => Bot::STATUS_APPROVED]);
 
         return $this->render('index', $data);
     }
@@ -62,19 +64,53 @@ class BotController extends Controller
     {
     	$data = [];
 
-        $category = Category::getCategoryById($category);
-        $bot = Bot::getBotById($bot);
+        $request = Yii::$app->request;
+        $session = Yii::$app->session;
 
-        if(!$category) {
+        $modelCategory = Category::getCategoryById($category);
+        $modelBot = Bot::getBotById($bot);
+
+        if(!$modelCategory) {
             throw new BadRequestHttpException(Yii::t('frontend', 'This category does not exist!'));
         }
 
-        if(!$bot) {
+        if(!$modelBot) {
             throw new BadRequestHttpException(Yii::t('frontend', 'This bot does not exist!'));
         }
 
-        $data['category'] = $category;
-        $data['bot'] = $bot;
+        if (!$session->isActive) $session->open();
+
+        if($session->hasFlash('comment_success')) {
+            $data['comment_success'] = $session->getFlash('comment_error');
+        }
+
+        if($session->hasFlash('comment_error')) {
+            $data['comment_error'] = $session->getFlash('comment_error');
+        }
+
+        $commentForm = new CommentForm;
+
+        $commentForm->bot_id = $bot->id;
+
+        if($request->isPost) {
+            if(!Yii::$app->user->isGuest) {
+                if($commentForm->load($request->post())) {
+                    if($commentForm->addComment()) {
+                        $session->setFlash('comment_success', Yii::t('frontend', 'Comment successfully added!'));
+
+                        return $this->redirect(['bot/view', 'category' => $category, 'bot' => $bot, '#' => 'comments']);
+                    } else {
+                        $session->setFlash('comment_error', Yii::t('frontend', 'Error send comment'));
+                    }
+                }
+            } else {
+                $session->setFlash('comment_error', Yii::t('frontend', 'You must be logged in!'));
+            }
+        }
+
+        $data['category'] = $modelCategory;
+        $data['bot'] = $modelBot;
+        $data['commentForm'] = $commentForm;
 
     	return $this->render('view', $data);
     }
@@ -92,4 +128,27 @@ class BotController extends Controller
 
         return $this->render('search', $data);
     }
+
+    /*public function actionComment()
+    {
+        $request = Yii::$app->request;
+
+        $commentForm = new CommentForm;
+
+        if($requst->isPost) {
+            if($commentForm->load($request->post())) {
+                $comment = $commentForm->addComment();
+
+                if($comment) {
+                    $session->setFlash('comment_success', Yii::t('frontend', 'Comment successfully added!'));
+                } else {
+                    $session->setFlash('comment_error', Yii::t('frontend', 'Error send comment'));
+                }
+
+                return $this->redirect(['bot/view', 'category' => $comment->bot->defCategory->slug, 'bot' => $comment->bot->username]);
+            }
+        }
+
+        return $this->redirect(['bot/index']);
+    }*/
 }

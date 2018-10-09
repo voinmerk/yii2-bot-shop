@@ -28,8 +28,14 @@ use common\models\User;
  */
 class Bot extends \yii\db\ActiveRecord
 {
-    const STATUS_INACTIVE = 0;
-    const STATUS_ACTIVE = 1;
+    const STATUS_REJECTED = 0;
+    const STATUS_APPROVED = 1;
+    const STATUS_PANDING_APPROVED = 2;
+    const STATUS_BANNED = 3;
+
+    const UNPUBLISHED = 0;
+    const PUBLISHED = 1;
+
     const START_PARAM = 'http://botshop.loc';
 
     public $category_ids = [];
@@ -52,11 +58,13 @@ class Bot extends \yii\db\ActiveRecord
             [['title', 'content', 'meta_title', 'username', 'image'], 'required'],
             [['content', 'meta_keywords', 'meta_description'], 'string'],
             [['title', 'meta_title', 'username', 'token', 'image', 'start_param'], 'string', 'max' => 255],
-            [['views', 'status', 'author_by', 'added_by', 'moderated_by', 'created_at', 'updated_at', 'default_category_id'], 'integer'],
+            [['views', 'status', 'published', 'author_by', 'added_by', 'moderated_by', 'created_at', 'updated_at', 'default_category_id'], 'integer'],
             ['start_param', 'default', 'value' => self::START_PARAM],
             [['username', 'token'], 'unique'],
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
+            ['status', 'default', 'value' => self::STATUS_PANDING_APPROVED],
+            ['status', 'in', 'range' => [self::STATUS_PANDING_APPROVED, self::STATUS_REJECTED, self::STATUS_APPROVED, self::STATUS_BANNED]],
+            ['published', 'default', 'value' => self::PUBLISHED],
+            ['published', 'in', 'range' => [self::PUBLISHED, self::UNPUBLISHED]],
             [['default_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['default_category_id' => 'id']],
             [['author_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_by' => 'id']],
             [['added_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['added_by' => 'id']],
@@ -98,6 +106,8 @@ class Bot extends \yii\db\ActiveRecord
             'moderated_by' => Yii::t('frontend', 'Moderated By'),
             'created_at' => Yii::t('frontend', 'Created At'),
             'updated_at' => Yii::t('frontend', 'Updated At'),
+            'status' => Yii::t('frontend', 'Status'),
+            'published' => Yii::t('frontend', 'Published'),
 
             'category_ids' => Yii::t('frontend', 'Категория бота'),
             'language_ids' => Yii::t('frontend', 'Языки бота'),
@@ -109,7 +119,7 @@ class Bot extends \yii\db\ActiveRecord
      */
     public static function getBotById($id)
     {
-        $query = self::find()->with(['comments', 'botLanguages', 'botsRating'])->where(['username' => $id, 'status' => self::STATUS_ACTIVE]);
+        $query = self::find()->with(['comments', 'botLanguages', 'botsRating'])->where(['username' => $id, 'status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
 
         return $query->one();
     }
@@ -119,7 +129,7 @@ class Bot extends \yii\db\ActiveRecord
      */
     public static function getListAll()
     {
-        $query = self::find()->with(['botsRating'])->where(['status' => self::STATUS_ACTIVE]);
+        $query = self::find()->with(['botsRating'])->where(['status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
 
         return $query->all();
     }
@@ -131,8 +141,8 @@ class Bot extends \yii\db\ActiveRecord
     {
         return self::find()
                     ->with(['botsRating'])
-                    ->where(['status' => self::STATUS_ACTIVE])
-                    ->andWhere(['or', ['like', 'title', $q], ['like', 'content', $q]])
+                    ->where(['status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED])
+                    ->andWhere(['or', ['like', 'meta_title', $q], ['like', 'title', $q], ['like', 'content', $q]])
                     ->all();
     }
 
@@ -173,7 +183,7 @@ class Bot extends \yii\db\ActiveRecord
      */
     public function getComments()
     {
-        return $this->hasMany(Comment::className(), ['id' => 'comment_id'])->viaTable('bot_to_comment', ['bot_id' => 'id']);
+        return $this->hasMany(Comment::className(), ['bot_id' => 'id'])->orderBy(['created_at' => SORT_DESC]);
     }
 
     /**
@@ -211,8 +221,10 @@ class Bot extends \yii\db\ActiveRecord
     public function getStatusList()
     {
         return [
-            Yii::t('frontend', 'Unpublished'),
-            Yii::t('frontend', 'Published'),
+            Yii::t('frontend', 'Rejected'),
+            Yii::t('frontend', 'Approved'),
+            Yii::t('frontend', 'Panding approved'),
+            Yii::t('frontend', 'Banned'),
         ];
     }
 
@@ -220,6 +232,21 @@ class Bot extends \yii\db\ActiveRecord
     {
         $statusList = $this->getStatusList();
 
-        return $statusList($this->status);
+        return $statusList[$this->status];
+    }
+
+    public function getPublishedList()
+    {
+        return [
+            Yii::t('frontend', 'Unpublished'),
+            Yii::t('frontend', 'Published'),
+        ];
+    }
+
+    public function getPublishedName()
+    {
+        $publishedList = $this->getPublishedList();
+
+        return $publishedList[$this->published];
     }
 }

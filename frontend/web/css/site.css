@@ -576,3 +576,52 @@ a.desc:after {
 .dropdownvisible {
 	height: auto;
 }
+
+.bot-comment .nav-tabs > li {
+    width: 50%;
+}
+
+.bot-comment .nav-tabs {
+    border: none;
+    margin-bottom: 20px;
+}
+
+.bot-comment .nav-tabs > li.active > a,
+.bot-comment .nav-tabs > li.active > a:hover,
+.bot-comment .nav-tabs > li.active > a:focus {
+    color: #fff;
+    cursor: default;
+    background-color: #b43535;
+    border: none;
+    margin: 0;
+    font-weight: 500;
+}
+
+.bot-comment .nav-tabs > li > a {
+    /*margin-right: 2px;*/
+    background-color: #ddd;
+    color: #555;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+}
+
+.bot-comment .tab-content {
+    padding: 15px;
+    padding-top: 0;
+}
+
+.page-comment {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.page-comment p {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.page-comment:last-child {
+    border: none;
+}

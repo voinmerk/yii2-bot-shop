@@ -31,7 +31,13 @@ $this->params['breadcrumbs'][] = $bot->title;
         </div>
 
         <div class="col-md-8">
+            <h2>@<?= $bot->username ?></h2>
+
+            <p><?= Yii::t('frontend', 'Status') . ': ' . $bot->statusName ?></p>
+
             <?php $form = ActiveForm::begin() ?>
+
+            <?= $form->field($bot, 'meta_title')->textInput() ?>
 
             <?= $form->field($bot, 'title')->textInput() ?>
 
