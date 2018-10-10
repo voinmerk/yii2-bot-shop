@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Хост:                         127.0.0.1
--- Версия сервера:               5.7.16 - MySQL Community Server (GPL)
+-- Версия сервера:               5.7.20 - MySQL Community Server (GPL)
 -- Операционная система:         Win64
 -- HeidiSQL Версия:              9.5.0.5196
 -- --------------------------------------------------------
@@ -519,6 +519,7 @@ CREATE TABLE IF NOT EXISTS `post_category` (
   `slug` varchar(255) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `template` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT '1',
   `created_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `created_at` int(11) NOT NULL,
@@ -533,8 +534,8 @@ CREATE TABLE IF NOT EXISTS `post_category` (
 
 -- Дамп данных таблицы yii_botshop_advanced.post_category: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `post_category` DISABLE KEYS */;
-INSERT INTO `post_category` (`id`, `slug`, `image`, `template`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-	(1, 'faq', '', 0, 343142692, 343142692, 0, 0);
+INSERT INTO `post_category` (`id`, `slug`, `image`, `template`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+	(1, 'faq', '', 0, 1, 343142692, 343142692, 0, 0);
 /*!40000 ALTER TABLE `post_category` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.post_category_translate
@@ -628,7 +629,7 @@ CREATE TABLE IF NOT EXISTS `post_translate` (
   CONSTRAINT `FK_post_trasnlate_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.post_translate: ~0 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.post_translate: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `post_translate` DISABLE KEYS */;
 INSERT INTO `post_translate` (`post_id`, `language_id`, `title`, `preview_content`, `content`, `meta_title`, `meta_keywords`, `meta_description`) VALUES
 	(1, 1, 'Первый пост, на русском', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', NULL, NULL),

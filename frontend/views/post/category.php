@@ -3,15 +3,15 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = Yii::t('frontend', 'Blogs') . ' - ' . $category->title;
+$this->title = Yii::t('frontend', 'Posts') . ' - ' . $category->title;
 
 $this->params['breadcrumbs'][] = [
-    'label' => Yii::t('frontend', 'Blogs'),
+    'label' => Yii::t('frontend', 'Posts'),
     'url' => ['blog/index'],
 ];
 $this->params['breadcrumbs'][] = $category->title;
 ?>
-<div class="blog-index">
+<div class="post-category">
     <div class="page-header">
         <h1><?= $category->title ?></h1>
     </div>

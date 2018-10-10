@@ -5,6 +5,7 @@ use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
+use yii\data\ActiveDataProvider;
 
 use frontend\models\Bot;
 use frontend\models\BotRating;
@@ -17,6 +18,8 @@ use \frontend\models\forms\CommentForm;
 
 class BotController extends Controller
 {
+    const BOTS_PER_PAGE = 40;
+
     public function behaviors() {
 		return [
 			'cache' => [

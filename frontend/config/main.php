@@ -58,18 +58,18 @@ return [
                 'languages/<lang:[\w_-]+>' => 'languages/default/index',
                 'languages' => 'languages/default/index',
 
+                // Post controller
+                //'post/search' => 'post/search',
+                'post/<category:[\w_\/-]+>/<post:[\w_-]+>' => 'post/view',
+                'post/<category:[\w_\/-]+>' => 'post/category',
+                'posts' => 'post/index',
+
                 // Catalog - bot controller
                 'catalog/search' => 'bot/search',
-                'catalog/<category:[\w_-]+>/<bot:[\w_-]+>' => 'bot/view',
-                'catalog/<category:[\w_-]+>' => 'bot/category',
+                'catalog/<category:[\w_\/-]+>/<bot:[\w_-]+>' => 'bot/view',
+                'catalog/<category:[\w_\/-]+>' => 'bot/category',
                 'catalog' => 'bot/index',
                 '' => 'bot/index',
-
-                // Post controller
-                'post/search' => 'post/search',
-                'post/<category:[\w_-]+>/<post:[\w_-]+>' => 'post/view',
-                'post/<category:[\w_-]+>' => 'post/category',
-                'post' => 'post/index',
 
                 // Account controller
                 'account/bot-update/<bot:[\w_-]+>' => 'account/bot-update',

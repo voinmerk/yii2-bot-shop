@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Url;
 use yii\helpers\Html;
 
 $isGuest = Yii::$app->user->isGuest;
@@ -18,6 +19,7 @@ $(function () {
 SCRIPT;
 // Register tooltip/popover initialization javascript
 $this->registerJs($js);
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => '/favicon.png']);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

@@ -3,11 +3,11 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = Yii::t('frontend', 'Blogs') . '';
+$this->title = Yii::t('frontend', 'Posts');
 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="blog-index">
+<div class="post-index">
     <div class="page-header">
         <h1><?= $this->title ?></h1>
     </div>

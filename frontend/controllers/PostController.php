@@ -6,11 +6,16 @@ use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 
+use frontend\models\Post;
+use frontend\models\PostCategory;
+
 class PostController extends Controller
 {
-    public function actionPost()
+    public function actionIndex()
     {
         $data = [];
+
+        // $data['categories'] = PostCategory::find()->where(['status' => PostCategory::STATUS_ACTIVE])->all();
 
         return $this->render('index', $data);
     }
