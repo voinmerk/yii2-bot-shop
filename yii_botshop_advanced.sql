@@ -124,13 +124,14 @@ CREATE TABLE IF NOT EXISTS `bot` (
   CONSTRAINT `FK_bot_user_added` FOREIGN KEY (`added_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_bot_user_author` FOREIGN KEY (`author_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_bot_user_moderated` FOREIGN KEY (`moderated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.bot: ~2 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.bot: ~3 rows (приблизительно)
 /*!40000 ALTER TABLE `bot` DISABLE KEYS */;
 INSERT INTO `bot` (`id`, `title`, `content`, `meta_title`, `meta_keywords`, `meta_description`, `username`, `token`, `start_param`, `image`, `views`, `status`, `published`, `default_category_id`, `author_by`, `added_by`, `moderated_by`, `created_at`, `updated_at`) VALUES
 	(1, 'FrontVisionBot', 'Удобный бот для работы с клиентами компании ООО FrontVision.', 'FrontVisionBot', NULL, NULL, 'frontvision_bot', '502079464:AAGVyl3_NZPLCNQFaj--DY6zKa-SOZySaiA', 'http://botshop.loc', 'frontvision.png', 0, 1, 1, 5, NULL, 343142692, 343142692, 1538469948, 1538469948),
-	(16, 'SuperBot', 'Ебланский бот, который меня уже блять  заебал!!! Но вроде работает...', 'SuperBot', NULL, NULL, 'super_bot', NULL, 'http://botshop.loc', 'bot_2743be6d0ebf6116e5109ac9da8d0ca8.jpg', 0, 1, 1, 1, NULL, 343142692, NULL, 1539022056, 1539022056);
+	(16, 'SuperBot', 'Ебланский бот, который меня уже блять  заебал!!! Но вроде работает...', 'SuperBot', NULL, NULL, 'super_bot', NULL, 'http://botshop.loc', 'bot_2743be6d0ebf6116e5109ac9da8d0ca8.jpg', 0, 1, 1, 1, NULL, 343142692, NULL, 1539022056, 1539022056),
+	(18, 'NewBot', 'Просто Lorem ipsum', 'Это новый бот', NULL, NULL, 'new_bot', NULL, 'http://botshop.loc', 'bot_d02a42d9cb3dec9320e5f550278911c7.jpg', 0, 2, 1, 1, NULL, 343142692, NULL, 1539088539, 1539088539);
 /*!40000 ALTER TABLE `bot` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.bot_category
@@ -277,13 +278,14 @@ CREATE TABLE IF NOT EXISTS `bot_to_bot_category` (
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.bot_to_bot_category: ~4 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.bot_to_bot_category: ~5 rows (приблизительно)
 /*!40000 ALTER TABLE `bot_to_bot_category` DISABLE KEYS */;
 INSERT INTO `bot_to_bot_category` (`bot_id`, `category_id`) VALUES
 	(1, 5),
 	(16, 1),
 	(16, 2),
-	(16, 3);
+	(16, 3),
+	(18, 1);
 /*!40000 ALTER TABLE `bot_to_bot_category` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.bot_to_bot_language
@@ -292,13 +294,14 @@ CREATE TABLE IF NOT EXISTS `bot_to_bot_language` (
   `bot_language_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.bot_to_bot_language: ~4 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.bot_to_bot_language: ~5 rows (приблизительно)
 /*!40000 ALTER TABLE `bot_to_bot_language` DISABLE KEYS */;
 INSERT INTO `bot_to_bot_language` (`bot_id`, `bot_language_id`) VALUES
 	(1, 1),
 	(1, 3),
 	(16, 1),
-	(16, 2);
+	(16, 2),
+	(18, 3);
 /*!40000 ALTER TABLE `bot_to_bot_language` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.bot_to_bot_tag
@@ -489,14 +492,9 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 -- Дамп структуры для таблица yii_botshop_advanced.post
 CREATE TABLE IF NOT EXISTS `post` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `preview_content` text NOT NULL,
-  `content` text NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `slug` varchar(255) NOT NULL,
-  `meta_title` varchar(255) NOT NULL,
-  `meta_keywords` text NOT NULL,
-  `meta_description` text NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_by` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `created_at` int(11) NOT NULL,
@@ -507,16 +505,18 @@ CREATE TABLE IF NOT EXISTS `post` (
   KEY `FK_post_user_updated` (`updated_by`),
   CONSTRAINT `FK_post_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_post_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- Дамп данных таблицы yii_botshop_advanced.post: ~0 rows (приблизительно)
 /*!40000 ALTER TABLE `post` DISABLE KEYS */;
+INSERT INTO `post` (`id`, `image`, `slug`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+	(1, 'uploads/post/1.png', 'first-post', 1, 343142692, 343142692, 0, 0);
 /*!40000 ALTER TABLE `post` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.post_category
 CREATE TABLE IF NOT EXISTS `post_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `slug` varchar(255) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `template` int(11) NOT NULL DEFAULT '0',
   `created_by` int(11) DEFAULT NULL,
@@ -524,16 +524,17 @@ CREATE TABLE IF NOT EXISTS `post_category` (
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `slug` (`slug`),
   KEY `FK_post_category_user_created` (`created_by`),
   KEY `FK_post_category_user_updated` (`updated_by`),
   CONSTRAINT `FK_post_category_user_created` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_post_category_user_updated` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.post_category: ~0 rows (приблизительно)
+-- Дамп данных таблицы yii_botshop_advanced.post_category: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `post_category` DISABLE KEYS */;
-INSERT INTO `post_category` (`id`, `parent_id`, `image`, `template`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-	(1, 0, NULL, 0, 343142692, 343142692, 0, 0);
+INSERT INTO `post_category` (`id`, `slug`, `image`, `template`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+	(1, 'faq', '', 0, 343142692, 343142692, 0, 0);
 /*!40000 ALTER TABLE `post_category` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.post_category_translate
@@ -611,11 +612,12 @@ CREATE TABLE IF NOT EXISTS `post_to_post_tag` (
 /*!40000 ALTER TABLE `post_to_post_tag` DISABLE KEYS */;
 /*!40000 ALTER TABLE `post_to_post_tag` ENABLE KEYS */;
 
--- Дамп структуры для таблица yii_botshop_advanced.post_trasnlate
-CREATE TABLE IF NOT EXISTS `post_trasnlate` (
+-- Дамп структуры для таблица yii_botshop_advanced.post_translate
+CREATE TABLE IF NOT EXISTS `post_translate` (
   `post_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
+  `preview_content` text NOT NULL,
   `content` text NOT NULL,
   `meta_title` varchar(255) NOT NULL,
   `meta_keywords` text,
@@ -626,9 +628,12 @@ CREATE TABLE IF NOT EXISTS `post_trasnlate` (
   CONSTRAINT `FK_post_trasnlate_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы yii_botshop_advanced.post_trasnlate: ~0 rows (приблизительно)
-/*!40000 ALTER TABLE `post_trasnlate` DISABLE KEYS */;
-/*!40000 ALTER TABLE `post_trasnlate` ENABLE KEYS */;
+-- Дамп данных таблицы yii_botshop_advanced.post_translate: ~0 rows (приблизительно)
+/*!40000 ALTER TABLE `post_translate` DISABLE KEYS */;
+INSERT INTO `post_translate` (`post_id`, `language_id`, `title`, `preview_content`, `content`, `meta_title`, `meta_keywords`, `meta_description`) VALUES
+	(1, 1, 'Первый пост, на русском', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', NULL, NULL),
+	(1, 2, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', NULL, NULL);
+/*!40000 ALTER TABLE `post_translate` ENABLE KEYS */;
 
 -- Дамп структуры для таблица yii_botshop_advanced.user
 CREATE TABLE IF NOT EXISTS `user` (

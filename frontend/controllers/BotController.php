@@ -17,6 +17,23 @@ use \frontend\models\forms\CommentForm;
 
 class BotController extends Controller
 {
+    public function behaviors() {
+		return [
+			'cache' => [
+				'class' =>'yii\filters\PageCache',
+    			'only' => ['index', 'category'],
+				'duration' => 0,
+				'dependency' => [
+			       'class' => 'yii\caching\DbDependency',
+			       'sql' => 'SELECT max(updated_at) AS max FROM bot',
+				],
+                'variations' => [
+                    Yii::$app->language,
+                ],
+			]
+		];
+	}
+
     public function beforeAction($action)
     {
         $model = new \frontend\models\forms\SearchForm;
