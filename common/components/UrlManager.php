@@ -1,13 +1,10 @@
 <?php
-/*
- * Добавляет указатель языка в ссылки
- */
 namespace common\components;
 
 use Yii;
 
-class UrlManager extends \yii\web\UrlManager {
-
+class UrlManager extends \yii\web\UrlManager
+{
     public $enableDefaultLanguageUrlCode;
 
     public function createUrl($params) {

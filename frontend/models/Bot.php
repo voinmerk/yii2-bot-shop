@@ -123,7 +123,7 @@ class Bot extends \yii\db\ActiveRecord
      */
     public static function getBotById($id)
     {
-        $query = self::find()->with(['botComments', 'botLanguages', 'botRating'])->where(['username' => $id, 'status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
+        $query = self::find()->with(['botComments', 'botLanguages', 'botRatings'])->where(['username' => $id, 'status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
 
         return $query->one();
     }
@@ -133,7 +133,7 @@ class Bot extends \yii\db\ActiveRecord
      */
     public static function getListAll()
     {
-        $query = self::find()->with(['botRating'])->where(['status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
+        $query = self::find()->with(['botRatings'])->where(['status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED]);
 
         return $query->all();
     }
@@ -144,7 +144,7 @@ class Bot extends \yii\db\ActiveRecord
     public static function getBotBySearchText($q)
     {
         return self::find()
-                    ->with(['botRating'])
+                    ->with(['botRatings'])
                     ->where(['status' => self::STATUS_APPROVED, 'published' => self::PUBLISHED])
                     ->andWhere(['or', ['like', 'meta_title', $q], ['like', 'title', $q], ['like', 'content', $q]])
                     ->all();

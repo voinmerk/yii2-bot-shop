@@ -56,8 +56,6 @@ NavBar::begin([
 ]);
 $menuItems = [
     ['label' => Yii::t('frontend', 'Catalog'), 'url' => ['/bot'], 'active' => $isActive('bot', '', true)],
-    /*['label' => 'About', 'url' => ['/site/about']],
-    ['label' => 'Contact', 'url' => ['/site/contact']],*/
 ];
 echo Nav::widget([
     'options' => ['class' => 'navbar-nav navbar-left'],

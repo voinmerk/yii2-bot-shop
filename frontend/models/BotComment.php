@@ -88,6 +88,11 @@ class BotComment extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'created_by'])->inverseOf('botComments');
     }
 
+    public function getAuthor()
+    {
+        return $this->createdBy->username;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

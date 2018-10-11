@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $bot->title;
                 <p class="text-center"><?= Html::a(Yii::t('frontend', 'Add to {icon}', ['icon' => Fa::icon('telegram')]), 'https://t.me/' . $bot->username . ($bot->start_param ? '?start=' . $bot->start_param : ''), ['class' => 'btn btn-primary btn-flat', 'style' => 'font-size: 18px;', 'target' => '_blank']) ?></p>
             </div>
             <div class="bot-languages">
-                <h4>Поддерживаемые языки:</h4>
+                <h4><?= Yii::t('frontend', 'Supported language') ?>:</h4>
                 <?php foreach($bot->botLanguages as $language) { ?>
                 <p class="label label-success"><?= $language->name ?></p>
                 <?php } ?>
@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $bot->title;
         </div>
 
         <div class="col-md-9">
-            <h3>Описание:</h3>
+            <h3><?= Yii::t('frontend', 'Description') ?>:</h3>
             <?= $bot->content ?>
         </div>
     </div>
@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $bot->title;
                             ]) ?>
                         </div>
 
-                        <?php foreach($bot->comments as $comment) { ?>
+                        <?php foreach($bot->botComments as $comment) { ?>
                         <?= $this->render('_comment', ['comment' => $comment]) ?>
                         <?php } ?>
                     </div>

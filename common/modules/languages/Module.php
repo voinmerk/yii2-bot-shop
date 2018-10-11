@@ -1,10 +1,9 @@
 <?php
-
 namespace common\modules\languages;
 
+use Yii;
 use common\modules\languages\models\LanguageKsl;
 use yii\base\BootstrapInterface;
-
 
 class Module extends \yii\base\Module implements BootstrapInterface
 {
@@ -24,7 +23,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public function bootstrap($app)
     {
         if(YII_ENV == 'test') return; //для тестового приложения отключаем.
-        
+
         $url = $app->request->url;
 
         //Получаем список языков в виде строки

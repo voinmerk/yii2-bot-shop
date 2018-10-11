@@ -6,6 +6,8 @@ $params = array_merge(
     require __DIR__ . '/params-local.php'
 );
 
+$params = require __DIR__ . '/../../common/config/params.php';
+
 return [
     'id' => 'app-botshop-public',
     'name' => '🙃 BotSpy',
@@ -54,7 +56,7 @@ return [
                 // site/index
                 'home' => 'site/index',
 
-                // Language module
+                // Language module (changes)
                 'languages/<lang:[\w_-]+>' => 'languages/default/index',
                 'languages' => 'languages/default/index',
 

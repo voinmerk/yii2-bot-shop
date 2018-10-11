@@ -12,18 +12,22 @@ $comsole = [
         'urlManager' => [
             'class' => 'common\components\UrlManager',
             'enableDefaultLanguageUrlCode' => true,
-            
+
             'baseUrl' => $params['frontendHostName'],
         ]
     ]
 ];
 
-$urlManager = \yii\helpers\ArrayHelper::merge($frontend['components']['urlManager'], $comsole['components']['urlManager']);
+$urlManager = \yii\helpers\ArrayHelper::merge($comsole['components']['urlManager'], $frontend['components']['urlManager']);
+
+/*var_dump($urlManager);
+exit;*/
 
 return [
     'id' => 'app-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'sourceLanguage' => 'en',
+    'bootstrap' => ['log', 'languages'],
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -43,6 +47,9 @@ return [
         ],
     ],
     'components' => [
+        'request' => [
+            'class' => 'common\components\Request',
+        ],
         'log' => [
             'targets' => [
                 [
@@ -52,6 +59,14 @@ return [
             ],
         ],
         'urlManager' => $urlManager,
+    ],
+    'modules' => [
+        'languages' => [
+            'class' => 'common\modules\languages\Module',
+
+            'default_language' => 'en', //основной язык (по-умолчанию)
+            'show_default' => false, //true - показывать в URL основной язык, false - нет
+        ],
     ],
     'params' => $params,
 ];

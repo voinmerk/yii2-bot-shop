@@ -4,14 +4,13 @@ namespace console\models\sitemap;
 use Yii;
 use yii\helpers\Url;
 // use yii\helpers\ArrayHelper;
-use frontend\models\Post;
-use frontend\models\PostTranslate;
+use frontend\models\Bot;
 use frontend\models\Language;
 use demi\sitemap\interfaces\Basic;
 use demi\sitemap\interfaces\GoogleAlternateLang;
 use demi\sitemap\interfaces\GoogleImage;
 
-class SitemapPost extends Post implements Basic, GoogleImage, GoogleAlternateLang
+class SitemapBot extends Bot implements Basic, GoogleImage, GoogleAlternateLang
 {
     /**
      * Handle materials by selecting batch of elements.
@@ -65,21 +64,21 @@ class SitemapPost extends Post implements Basic, GoogleImage, GoogleAlternateLan
 
         // Add to sitemap.xml links to regular pages
         return [
-            // site/index
+            // post/index
             [
-                'loc' => Url::to(['/site/index']),
+                'loc' => Url::to(['/bot/index']),
                 'lastmod' => time(),
                 'changefreq' => static::CHANGEFREQ_DAILY,
                 'priority' => static::PRIORITY_10,
-                'alternateLinks' => $this->getLanguageLink('/site/index'),
+                'alternateLinks' => $this->getLanguageLink('/bot/index'),
             ],
             // post/index
             [
-                'loc' => Url::to(['/post/index']),
+                'loc' => Url::to(['/bot/category']),
                 'lastmod' => time(),
                 'changefreq' => static::CHANGEFREQ_DAILY,
                 'priority' => static::PRIORITY_10,
-                'alternateLinks' => $this->getLanguageLink('/post/index'),
+                'alternateLinks' => $this->getLanguageLink('/bot/category'),
             ],
             // ... you can add more regular pages if needed, but I recommend
             // separate pages related only for current model class
@@ -94,13 +93,7 @@ class SitemapPost extends Post implements Basic, GoogleImage, GoogleAlternateLan
         $language = Language::getLanguageIdByCode($lang);
 
         return static::find()
-            ->select(['post.id', 'post.slug', 'post.created_at', 'post.updated_at', 'p.title AS title'])
-            ->joinWith([
-                'postTranslates' => function($query) {
-                    return $query->from(['p' => PostTranslate::tableName()]);
-                }
-            ])
-            ->where(['status' => Post::STATUS_ACTIVE, 'p.language_id' => $language])
+            ->where(['status' => Bot::STATUS_APPROVED, 'published' => Bot::PUBLISHED])
             ->orderBy(['created_at' => SORT_DESC])
             ->all();
 
@@ -117,7 +110,7 @@ class SitemapPost extends Post implements Basic, GoogleImage, GoogleAlternateLan
     public function getSitemapLoc($lang = null)
     {
         // Return absolute url to Post model view page
-        return Url::to(['/post/view', 'lang' => $lang, 'category' => 'categorka', 'post' => $this->slug], true);
+        return Url::to(['/bot/view', 'lang' => $lang, 'category' => $this->defCategory->slug, 'bot' => $this->slug], true);
     }
 
     /**
@@ -173,7 +166,7 @@ class SitemapPost extends Post implements Basic, GoogleImage, GoogleAlternateLan
     {
         // Return absolute url to each Post image
         // @see $image argument becomes from $this->getSitemapMaterialImages()
-        return Yii::$app->urlManager->baseUrl . $image;
+        return Yii::$app->urlManager->baseUrl . '/uploads/post/' . $image;
     }
 
     /**
