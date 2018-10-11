@@ -136,7 +136,7 @@ class BotCategory extends \yii\db\ActiveRecord
      */
     public function getBots()
     {
-        return $this->hasMany(Bot::className(), ['id' => 'bot_id'])->viaTable('bot_to_bot_category', ['category_id' => 'id']);
+        return $this->hasMany(Bot::className(), ['id' => 'bot_id'])->viaTable('bot_to_bot_category', ['category_id' => 'id'])->andWhere(['published' => Bot::PUBLISHED, 'status' => Bot::STATUS_APPROVED]);
     }
 
     /**
