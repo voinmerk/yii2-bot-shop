@@ -10,6 +10,16 @@ $this->params['breadcrumbs'][] = [
     'url' => Url::to(['bot/index']),
 ];
 $this->params['breadcrumbs'][] = $category->title;
+
+$this->registerMetaTag([
+  'name' => 'description',
+  'content' => $category->meta_description,
+]);
+
+$this->registerMetaTag([
+  'name' => 'keywords',
+  'content' => $category->meta_keywords,
+]);
 ?>
 <div class="catalog-index">
     <div class="page-header">

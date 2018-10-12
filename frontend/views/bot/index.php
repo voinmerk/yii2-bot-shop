@@ -6,6 +6,16 @@ use yii\helpers\Html;
 $this->title = Yii::t('frontend', 'Bots Catalog') . '';
 
 $this->params['breadcrumbs'][] = $this->title;
+
+$this->registerMetaTag([
+  'name' => 'description',
+  'content' => 'Meta description',
+]);
+
+$this->registerMetaTag([
+  'name' => 'keywords',
+  'content' => 'meta, tags, for, your, site',
+]);
 ?>
 <div class="catalog-index">
     <div class="page-header">

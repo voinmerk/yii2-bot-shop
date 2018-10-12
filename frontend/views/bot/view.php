@@ -29,6 +29,16 @@ $this->params['breadcrumbs'][] = [
     'url' => ['bot/category', 'category' => $category->slug],
 ];
 $this->params['breadcrumbs'][] = $bot->title;
+
+$this->registerMetaTag([
+  'name' => 'description',
+  'content' => $bot->meta_description,
+]);
+
+$this->registerMetaTag([
+  'name' => 'keywords',
+  'content' => $bot->meta_keywords,
+]);
 ?>
 <div class="catalog-view">
     <div class="page-header">

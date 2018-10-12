@@ -211,7 +211,7 @@ class Bot extends \yii\db\ActiveRecord
      */
     public function getBotComments()
     {
-        return $this->hasMany(BotComment::className(), ['bot_id' => 'id'])->inverseOf('bot');
+        return $this->hasMany(BotComment::className(), ['bot_id' => 'id'])->orderBy(['created_at' => SORT_DESC])->inverseOf('bot');
     }
 
     /**

@@ -2,8 +2,9 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-// use yii\widgets\Menu;
-use valiant\widgets\ListGroupWidget as Menu;
+use valiant\widgets\ListGroupWidget;
+
+$request = Yii::$app->request;
 
 $menuItems = [];
 
@@ -13,11 +14,11 @@ if($categories) {
             'label' => $category->title . ' (' . $category->getBots()->count() . ') ',
             'url' => Url::to(['bot/category', 'category' => $category->slug]),
             'options' => ['class' => 'list-group-item'],
-            'active' => Yii::$app->request->get('category') == $category->slug,
+            'active' => isset($request->get['category']) && $request->get['category'] == $category->slug,
         ];
     }
 
-    echo Menu::widget([
+    echo ListGroupWidget::widget([
         'items' => $menuItems,
         'options' => ['class' => 'list-group'],
         //'active' => true,
